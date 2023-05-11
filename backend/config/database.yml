@@ -83,5 +83,6 @@ production:
   <<: *default
   database: meatup_production
   username: meatup
-  password: <%= ENV["BACKEND_DATABASE_PASSWORD"] %>
+  # password: <%= ENV["BACKEND_DATABASE_PASSWORD"] %>
   url: <%= ENV['DATABASE_URL'] %>
+  secret_key_base:  <%= ENV['SECRET_KEY_BASE'] %>
