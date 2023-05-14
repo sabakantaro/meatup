@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'
       }
+      resources :places, only: %i[index create destroy]
 
       namespace :auth do
         resources :sessions, only: %i[index]
