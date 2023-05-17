@@ -1,7 +1,12 @@
 class Api::V1::EventsController < ApplicationController
-  before_action :set_event, only: %i[destroy]
   def index
-    render json: { events: Event.includes(:user, :place).as_json() }, status: 200
+    render json: { events: Event.includes(:user, :place).as_json }, status: 200
+  end
+
+  def show
+    event = Event.includes(:user, :place).find(params[:id])
+    render json: { event: event.as_json, comments: event.comments.includes(:user).as_json()
+      }, status: 200
   end
 
   def create
@@ -15,10 +20,6 @@ class Api::V1::EventsController < ApplicationController
   end
 
   private
-
-  def set_event
-    @event = Event.find(params[:id])
-  end
 
   def event_params
     params.permit(:description, :title, :meeting_datetime, :place_id, :user_id)

@@ -32,6 +32,8 @@ export interface Event {
 }
 
 export interface EventApiJson {
+  comments: any
+  event: any
   events: Event[]
 }
 
@@ -47,4 +49,17 @@ export interface Place {
 
 export interface PlaceApiJson {
   places: Place[]
+}
+
+export interface Comment {
+  id: string
+  content: string
+  userId: string
+  eventId: string
+}
+
+export interface CommentApiJson {
+  content: string
+  userId: string
+  eventId: string
 }

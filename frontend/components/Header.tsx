@@ -9,7 +9,7 @@ import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { AuthContext } from "@/pages/_app";
-import UserMenu from "./UserMenu";
+import UserMenu from "./users/Menu";
 
 function Header({ placeholder }: any) {
   const { currentUser, isSignedIn, setIsSignedIn } = useContext(AuthContext);
@@ -43,7 +43,7 @@ function Header({ placeholder }: any) {
   };
 
   return (
-    <header className='sticky top-0 z-50 grid grid-cols-3 bg-white shadow-mb p-5 md:px-10'>
+    <header className='top-0 z-50 grid grid-cols-3 bg-white shadow-mb p-5 md:px-10 border-b border-s-gray-500'>
       <div
         onClick={() => router.push("/")}
         className='relative flex item-center h-10 cursor-pointer my-auto'

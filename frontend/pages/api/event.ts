@@ -7,6 +7,10 @@ export const getEvents = (): AxiosPromise<EventApiJson> => {
   return client.get("/events")
 }
 
+export const getEvent = (id: string): AxiosPromise<EventApiJson> => {
+  return client.get(`/events/${id}`)
+}
+
 export const createEvent = (data: FormData): AxiosPromise => {
   return client.post("/events", data)
 }
