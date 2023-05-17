@@ -128,7 +128,7 @@ const Show = () => {
                   <div className='w-full relative mb-8'>
                     <div className='flex'>
                       <div className='hidden md:block xmedia'>
-                        <Avatar userName='ss' />
+                        {currentUser && <Avatar userName={currentUser?.name} />}
                       </div>
                       <div className='flex flex-col flex-1 ml-4 sm:ml-5'>
                         <textarea
@@ -148,7 +148,6 @@ const Show = () => {
                           onClick={handleCreateComment}
                         >
                           <svg
-                            xmlns='http://www.w3.org/2000/svg'
                             fill={content !== "" ? "outlined" : "none"}
                             strokeWidth={1.8}
                             stroke={content !== "" ? "" : "currentColor"}
