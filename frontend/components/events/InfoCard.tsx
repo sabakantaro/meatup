@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { StarIcon } from "@heroicons/react/24/solid";
 import { HeartIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/router";
 
 function InfoCard({ item }: any) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const img = new Image();
@@ -14,7 +16,10 @@ function InfoCard({ item }: any) {
   }, [item]);
 
   return (
-    <div className='flex py-7 px-2 pr-4 border-b cursor-pointer hover:opacity-80 hover:shadow-lg transition duration-200 ease-out first:border-t'>
+    <div
+      className='flex py-7 px-2 pr-4 border-b cursor-pointer hover:opacity-80 hover:shadow-lg transition duration-200 ease-out first:border-t'
+      onClick={() => router.push(`/events/${item.id}/show`)}
+    >
       <div className='relative h-24 w-40 md:h-52 md:w-80 flex-shrink-0'>
         {!imageLoaded && (
           <div className='animate-pulse bg-gray-200 rounded-2xl w-full h-full' />
@@ -34,7 +39,7 @@ function InfoCard({ item }: any) {
         </div>
         <h4 className='text-xl'>{item.title}</h4>
         <div className='border-b w-10 pt-2' />
-        <p className='pt-2 text-sm text-gray-500 flex-grow'>
+        <p className='pt-2 text-sm text-gray-500 flex-grow overflow-ellipsis line-clamp-3'>
           {item.description}
         </p>
         <div className='flex justify-between items-end pt-5'>

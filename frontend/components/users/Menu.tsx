@@ -7,13 +7,6 @@ function classNames(...classes: any) {
 }
 
 const UserMenu = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const handleSignOut = () => {
-    // Handle sign-out logic here
-    console.log("Sign out");
-  };
-
   return (
     <>
       <Menu as='div' className='relative inline-block text-left'>
@@ -74,21 +67,6 @@ const UserMenu = () => {
                   </a>
                 )}
               </Menu.Item>
-              <form method='POST' action='#'>
-                <Menu.Item>
-                  {({ active }: any) => (
-                    <button
-                      type='submit'
-                      className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block w-full px-4 py-2 text-left text-sm"
-                      )}
-                    >
-                      Sign out
-                    </button>
-                  )}
-                </Menu.Item>
-              </form>
             </div>
           </Menu.Items>
         </Transition>

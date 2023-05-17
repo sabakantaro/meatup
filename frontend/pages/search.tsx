@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import InfoCard from "@/components/InfoCard";
+import InfoCard from "@/components/events/InfoCard";
 import Map from "@/components/Map";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
@@ -10,8 +10,8 @@ function Search({ searchResults = [] }: any) {
   console.log(searchResults.events);
   const router = useRouter();
   const { location, startDate, endDate, noOfGuests }: any = router.query;
-  const formattedStartDate = format(new Date(startDate), "dd MMMM yy");
-  const formattedEndDate = format(new Date(endDate), "dd MMMM yy");
+  const formattedStartDate = startDate && format(new Date(startDate), "dd MMMM yy");
+  const formattedEndDate = endDate && format(new Date(endDate), "dd MMMM yy");
   const range = `${formattedStartDate} - ${formattedEndDate}`;
   return (
     <div>

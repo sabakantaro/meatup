@@ -1,9 +1,9 @@
-import '@/styles/globals.css'
-import 'tailwindcss/tailwind.css'
-import type { AppProps } from 'next/app'
+import "@/styles/globals.css";
+import "tailwindcss/tailwind.css";
+import type { AppProps } from "next/app";
 import ProgressBar from "@badrap/bar-of-progress";
-import Router from "next/router"
-import "mapbox-gl/dist/mapbox-gl.css"
+import Router from "next/router";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 import { useState, useEffect, createContext } from "react";
 import { useRouter } from "next/router";
@@ -13,23 +13,25 @@ import { User } from "@/typings";
 
 const progress = new ProgressBar({
   size: 4,
-  color: '#FE595E',
-  className: 'z-50',
+  color: "#FE595E",
+  className: "z-50",
   delay: 100,
 });
 
-Router.events.on('routeChangeStart', progress.start)
-Router.events.on('routeChangeComplete', progress.finish)
-Router.events.on('routeChangeError', progress.finish)
+Router.events.on("routeChangeStart", progress.start);
+Router.events.on("routeChangeComplete", progress.finish);
+Router.events.on("routeChangeError", progress.finish);
 
-export const AuthContext = createContext({} as {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  isSignedIn: boolean;
-  setIsSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
-  currentUser: User | undefined;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User | undefined>>;
-});
+export const AuthContext = createContext(
+  {} as {
+    loading: boolean;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    isSignedIn: boolean;
+    setIsSignedIn: React.Dispatch<React.SetStateAction<boolean>>;
+    currentUser: User | undefined;
+    setCurrentUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  }
+);
 
 export default function App({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -61,16 +63,28 @@ export default function App({ Component, pageProps }: AppProps) {
 
   // Redirect unauthenticated users to the sign-in page
   useEffect(() => {
-    if (!loading && !isSignedIn && router.pathname !== "/signin") {
+    if (
+      !loading &&
+      !isSignedIn &&
+      router.pathname !== "/signin" &&
+      router.pathname !== "/signup"
+    ) {
       router.push("/signin");
     }
-  }, [loading, isSignedIn]);
+  }, [loading, isSignedIn, router]);
 
   return (
     <AuthContext.Provider
-      value={{ loading, setLoading, isSignedIn, setIsSignedIn, currentUser, setCurrentUser }}
+      value={{
+        loading,
+        setLoading,
+        isSignedIn,
+        setIsSignedIn,
+        currentUser,
+        setCurrentUser,
+      }}
     >
-        <Component {...pageProps} />
+      <Component {...pageProps} />
     </AuthContext.Provider>
   );
 }

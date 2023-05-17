@@ -4,7 +4,7 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 
 function Map({ events }: any) {
   const [selectedLocation, setSelectedLocation] = useState({});
-  const coordinates = events?.map((result: any) => ({
+  const coordinates = events.map((result: any) => ({
     longitude: result.place.longitude,
     latitude: result.place.latitude,
   }));
