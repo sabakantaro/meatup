@@ -10,6 +10,7 @@ Rails.application.routes.draw do
         registrations: 'api/v1/auth/registrations'
       }
       resources :places, only: %i[index create destroy]
+      resources :users, only: %i[show update]
 
       namespace :auth do
         resources :sessions, only: %i[index]

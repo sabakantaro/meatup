@@ -7,10 +7,7 @@ const options = {
 
 const client = applyCaseMiddleware(
   axios.create({
-    baseURL: "http://localhost:5000/api/v1/",
-    // headers: {
-    //   "Content-Type": "multipart/form-data",
-    // },
+    baseURL: process.env.NEXT_PUBLIC_AUTH_URL as string,
   }),
   options
 );
