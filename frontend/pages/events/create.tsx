@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { createEvent } from "@/pages/api/event";
 import { getPlaces } from "@/pages/api/place";
-import { AuthContext } from "./_app";
+import { AuthContext } from "../_app";
 import Header from "@/components/Header";
 
 const PostForm = () => {

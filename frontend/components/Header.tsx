@@ -9,7 +9,9 @@ import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { AuthContext } from "@/pages/_app";
-import UserMenu from "./users/Menu";
+import UtilityMenu from "./Menu";
+import { Bars3Icon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { Menu } from "@headlessui/react";
 
 function Header({ placeholder }: any) {
   const { currentUser, isSignedIn, setIsSignedIn } = useContext(AuthContext);
@@ -48,7 +50,9 @@ function Header({ placeholder }: any) {
         onClick={() => router.push("/")}
         className='relative flex item-center h-10 cursor-pointer my-auto'
       >
-        <h1 className='text-red-400 font-semibold text-2xl font-serif'>Meatup</h1>
+        <h1 className='text-red-400 font-semibold text-2xl font-serif'>
+          Meatup
+        </h1>
       </div>
       <div className='flex items-center md:border-2 rounded-full py-2 md:shadow-sm'>
         <input
@@ -63,13 +67,40 @@ function Header({ placeholder }: any) {
       <div className='flex items-center space-x-0 justify-end text-gray-500'>
         <p
           className='hidden md:inline cursor-pointer mr-2'
-          onClick={() => router.push("/createEvent")}
+          onClick={() => router.push("/events/create")}
         >
           Become a host
         </p>
         <GlobeAltIcon className='h-6 cursor-pointer pr-2' />
         {isSignedIn ? (
-          <UserMenu />
+          <UtilityMenu
+            items={[
+              {
+                name: "Profile",
+                href: `/users/${currentUser && currentUser.id}/show`,
+              },
+              {
+                name: "Notifications",
+                href: "#",
+              },
+              {
+                name: "Messages",
+                href: "#",
+              },
+              {
+                name: "Logout",
+                href: "#",
+              },
+            ]}
+            button={
+              <>
+                <Menu.Button className='flex items-center space-x-2 border-2 p-2 rounded-full'>
+                  <Bars3Icon className='h-6' />
+                  <UserCircleIcon className='h-6' />
+                </Menu.Button>
+              </>
+            }
+          />
         ) : (
           <button
             className='hidden md:inline cursor-pointer'
