@@ -1,11 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { StarIcon } from "@heroicons/react/24/solid";
-import { HeartIcon } from "@heroicons/react/24/outline";
+import React, { useState, useCallback, useEffect, useContext } from "react";
+import { BookmarkIcon } from "@heroicons/react/24/solid";
+import { BookmarkIcon as BookmarkOutlineIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
+import moment from "moment";
+import { AuthContext } from "@/pages/_app";
+import { createBookmark, deleteBookmark } from "@/pages/api/bookmark";
+import BookmarkButton from "./BookmarkButton";
+import ShareButton from "./ShareButton";
 
 function InfoCard({ item }: any) {
+  const { isSignedIn, currentUser } = useContext(AuthContext);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [bookmark, setBookmark] = useState(false);
   const router = useRouter();
+
+  const setUsersBookmarks = useCallback(() => {
+    if (isSignedIn) {
+      setBookmark(
+        currentUser?.bookmarks?.some((b: any) => b?.eventId === item?.id)
+      );
+    }
+  }, [isSignedIn, currentUser, item]);
 
   useEffect(() => {
     const img = new Image();
@@ -13,7 +28,30 @@ function InfoCard({ item }: any) {
     img.onload = () => {
       setImageLoaded(true);
     };
-  }, [item]);
+    setUsersBookmarks();
+  }, [item, setUsersBookmarks]);
+
+  const handleBookmarks = useCallback(
+    async (e: any) => {
+      e.stopPropagation();
+      if (bookmark) {
+        await deleteBookmark(
+          String(item?.id),
+          currentUser?.bookmarks.filter((b: any) => b?.eventId === item?.id)[0]
+            ?.id
+        );
+        setBookmark(false);
+      } else {
+        const data: any = {
+          eventId: String(item?.id),
+          userId: currentUser?.id,
+        };
+        await createBookmark(String(item?.id), data);
+        setBookmark(true);
+      }
+    },
+    [currentUser, item, bookmark]
+  );
 
   return (
     <div
@@ -26,32 +64,37 @@ function InfoCard({ item }: any) {
         )}
         {imageLoaded && (
           <img
-            alt=''
+            alt='Place Image'
             src={item?.place?.image?.url}
             className='rounded-2xl w-full h-full object-cover image-loaded'
           />
         )}
       </div>
       <div className='flex flex-col flex-grow pl-5'>
-        <div className='flex justify-between'>
-          <p>{item.location}</p>
-          <HeartIcon className='h-7 cursor-pointer' />
+        <div className='flex justify-between text-orange-700 pb-1'>
+          <p className=''>
+            {item?.meeting_datetime &&
+              moment(new Date(item?.meeting_datetime)).format(
+                "dddd, MMMM DD, YYYY HH:mm"
+              )}
+          </p>
         </div>
-        <h4 className='text-xl'>{item.title}</h4>
-        <div className='border-b w-10 pt-2' />
-        <p className='pt-2 text-sm text-gray-500 flex-grow overflow-ellipsis line-clamp-3'>
+        <h4 className='text-xl pb-2'>{item.title}</h4>
+        <div className='w-10' />
+        <p className='text-sm text-gray-500 flex-grow overflow-ellipsis line-clamp-3'>
           {item.description}
         </p>
         <div className='flex justify-between items-end pt-5'>
-          <p className='flex items-center'>
-            <StarIcon className='h-5 text-red-400' />
-            {item.score}
-          </p>
           <div>
-            <p className='text-lg lg:text-2xl font-semibold pb-2'>
-              {item.price}
+            <p className='text-right font-extralight'>
+              {item?.price && item?.price > 0 ? item.price : "FREE"}
             </p>
-            <p className='text-right font-extralight'>{item.total}</p>
+          </div>
+          <div className='flex items-center space-x-5 ml-5'>
+            <button className='text-gray-500 hover:text-gray-400'>
+              <ShareButton />
+            </button>
+            <BookmarkButton item={item} />
           </div>
         </div>
       </div>

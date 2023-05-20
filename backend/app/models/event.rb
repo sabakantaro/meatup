@@ -1,7 +1,7 @@
 class Event < ApplicationRecord
   validates :description, presence: true, length: { maximum: 140 }
   has_many :participants, dependent: :destroy
-  has_many :events_favorites, dependent: :destroy
+  has_many :bookmarks, dependent: :destroy
   has_many :comments, dependent: :destroy
   belongs_to :user, optional: true
   belongs_to :place, optional: true

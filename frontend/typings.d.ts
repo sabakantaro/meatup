@@ -22,6 +22,9 @@ export interface User {
     url: string
   }
   allowPasswordChange: boolean
+  created_at: string
+  updated_at: string
+  bookmarks: any
 }
 
 export interface Event {
