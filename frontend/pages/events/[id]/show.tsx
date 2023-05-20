@@ -17,7 +17,6 @@ const Show = () => {
   const [event, setEvent] = useState<any>(null);
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState("");
-  const [open, setOpen] = useState(false);
   const router = useRouter();
   const { id } = router.query;
 
@@ -39,24 +38,6 @@ const Show = () => {
   useEffect(() => {
     handleGetEvent();
   }, [handleGetEvent]);
-
-  // const handleCreateParticipate = useCallback(async () => {
-  //   try {
-  //     const data = {
-  //       user: {
-  //         uid: currentUser?.uid,
-  //         displayName: currentUser?.displayName,
-  //         photoURL: currentUser?.photoURL,
-  //       },
-  //       eventId: id,
-  //       createdAt: serverTimestamp(),
-  //     };
-  //     await db.collection("participations").doc().set(data);
-  //     router.push(`/events/${id}/thanks`);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }, [currentUser, id, router]);
 
   const handleCreateComment = useCallback(async () => {
     try {

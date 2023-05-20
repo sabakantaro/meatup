@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import moment from "moment";
+import { createParticipant } from "@/pages/api/participant";
+import { AuthContext } from "@/pages/_app";
+import { useRouter } from "next/router";
 
 type Props = {
   event: any;
 };
 
 function AttendanceFooter({ event }: Props) {
+  const { currentUser } = useContext(AuthContext);
+  const router = useRouter();
+
+  const handleParticipant = () => {
+    const data: any = {
+      user_id: currentUser?.id,
+      event_id: event?.id,
+    };
+    const res: any = createParticipant(data);
+    if (res) {
+      router.push(`/events/${event?.id}/attendance`);
+    }
+  };
+
+  const isEnable =
+    // !event?.participants?.some((p: any) => p?.userId === currentUser?.id) && // Not already joined
+    event?.participants?.length === 0 && // No participants
+    event?.user?.id !== currentUser?.id; // Not the owner
+
   return (
     <>
       <div className='sticky bottom-0 bg-white w-full py-5 z-10 px-5 lg:px-20'>
@@ -50,7 +72,15 @@ function AttendanceFooter({ event }: Props) {
                     </div>
                   </div>
                   <div className='flex items-center'>
-                    <button className='py-2.5 px-8  rounded-lg border bg-red-400 border-red-400 leading-8 text-white font-semibold whitespace-nowrap hover:bg-red-300 hover:border-red-300'>
+                    <button
+                      className={`py-2.5 px-8  rounded-lg border leading-8 text-white font-semibold whitespace-nowrap ${
+                        !isEnable
+                          ? "bg-gray-400 border-gray-400"
+                          : "bg-red-400 border-red-400 hover:bg-red-300 hover:border-red-300"
+                      }`}
+                      onClick={() => handleParticipant()}
+                      disabled={!isEnable}
+                    >
                       Join
                     </button>
                   </div>

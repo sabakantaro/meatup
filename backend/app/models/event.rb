@@ -1,6 +1,6 @@
 class Event < ApplicationRecord
   validates :description, presence: true, length: { maximum: 140 }
-  has_one :participate, dependent: :destroy
+  has_many :participants, dependent: :destroy
   has_many :events_favorites, dependent: :destroy
   has_many :comments, dependent: :destroy
   belongs_to :user, optional: true
@@ -14,6 +14,9 @@ class Event < ApplicationRecord
         },
         place: {
           only: %i[id location latitude longitude image]
+        },
+        participants: {
+          only: %i[id event_id user_id],
         }
       ],
     )
