@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :events, only: %i[index show create destroy] do
         resources :comments, only: %i[create destroy]
+        resources :bookmarks, only: %i[create destroy]
       end
       get 'events/index'
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {

@@ -8,7 +8,8 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_many :events, dependent: :destroy
-  has_many :comments
+  has_many :bookmarks, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   mount_uploader :image, ImageUploader
 
@@ -24,7 +25,8 @@ class User < ActiveRecord::Base
             }
           ]
         },
-        comments: { only: %i[id content] }
+        comments: { only: %i[id content] },
+        bookmarks: { only: %i[id event_id]}
       ],
     )
   end
