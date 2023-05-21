@@ -66,3 +66,18 @@ export interface CommentApiJson {
   userId: string
   eventId: string
 }
+
+export interface Chatroom {
+  chatroom: {
+    id: number
+  }
+  otherUser: User,
+  lastMessage: Message
+}
+
+export interface Message {
+  chatroomId: number
+  userId: number | undefined
+  content: string
+  createdAt?: Date
+}
