@@ -85,7 +85,7 @@ function Header({ placeholder }: any) {
               },
               {
                 name: "Messages",
-                href: "#",
+                href: `/chatrooms`,
               },
               {
                 name: "Logout",

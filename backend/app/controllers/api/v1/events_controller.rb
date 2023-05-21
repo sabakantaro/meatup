@@ -4,9 +4,10 @@ class Api::V1::EventsController < ApplicationController
   end
 
   def show
-    event = Event.includes(:user, :place).find(params[:id])
-    render json: { event: event.as_json, comments: event.comments.includes(:user).as_json()
-      }, status: 200
+    event = Event.includes(:user, :place).find_by(id: params[:id])
+    return head :not_found unless event.present?
+
+    render json: { event: event.as_json, comments: event.comments.includes(:user).as_json }, status: 200
   end
 
   def create
