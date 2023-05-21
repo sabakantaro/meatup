@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useRouter } from "next/router";
-import { AuthContext } from "../../_app";
 import { getEvent } from "@/pages/api/event";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -8,10 +7,7 @@ import AttendanceFooter from "@/components/events/AttendanceFooter";
 import moment from "moment";
 
 const Attendance = () => {
-  const { currentUser } = useContext(AuthContext);
   const [event, setEvent] = useState<any>(null);
-  const [comments, setComments] = useState([]);
-  const [content, setContent] = useState("");
   const router = useRouter();
   const { id } = router.query;
 
@@ -20,8 +16,6 @@ const Attendance = () => {
       const res = await getEvent(id as string);
       if (res?.status === 200) {
         setEvent(res?.data.event as any);
-        setComments(res?.data.comments as any);
-        console.log(res?.data.comments);
       } else {
         console.log("No event");
       }
@@ -107,9 +101,12 @@ const Attendance = () => {
                       </div>
                     </span>
                     <div className='gap-4 my-2.5'>
-                      <div className='text-center sm:w-auto w-[150px]'>
+                      <div className='text-center md:w-auto w-[150px]'>
                         <div>
                           <button
+                            onClick={() =>
+                              router.push(`/chatrooms/${event?.user?.id}`)
+                            }
                             disabled={!event?.user}
                             className='py-1 w-full flex flex-row justify-center bg-teal-700 rounded-lg border-2 border-link leading-8 text-link whitespace-nowrap font-medium disabled:bg-gray-400 disabled:cursor-not-allowed text-white disabled:border-0 disabled:py-2 h-10 items-center'
                           >

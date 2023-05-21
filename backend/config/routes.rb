@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       resources :places, only: %i[index create destroy]
       resources :users, only: %i[show update]
       resources :participants, only: %i[create destroy]
+      resources :chatrooms, only: %i[index show]
+      resources :messages, only: %i[create]
 
       namespace :auth do
         resources :sessions, only: %i[index]

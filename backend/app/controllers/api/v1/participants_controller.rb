@@ -1,6 +1,7 @@
 class Api::V1::ParticipantsController < ApplicationController
   def create
     participant = Participant.create(participants_params)
+    create_chatroom(participant)
 
     if participant.save
       render json: { participant: participant }, status: :ok
@@ -18,5 +19,18 @@ class Api::V1::ParticipantsController < ApplicationController
 
   def participants_params
     params.permit(:event_id, :user_id)
+  end
+
+  def create_chatroom(participant)
+    chatroom = Chatroom.create
+    ChatroomUser.find_or_create_by(
+      chatroom_id: chatroom.id,
+      user_id: participant.user_id
+    )
+    event = Event.find_by(id: participant.event_id)
+    ChatroomUser.find_or_create_by(
+      chatroom_id: chatroom.id,
+      user_id: event.user_id
+    )
   end
 end

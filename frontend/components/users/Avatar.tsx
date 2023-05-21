@@ -2,7 +2,9 @@ import React from "react";
 
 const Avatar = ({ src, userName, size = 12 }: any) => {
   return (
-    <div className='inline-block rounded-full overflow-hidden bg-red-400'>
+    <div
+      className={`inline-block rounded-full overflow-hidden bg-red-400 w-${size} h-${size}`}
+    >
       {src ? (
         <img
           src={src}
@@ -11,7 +13,7 @@ const Avatar = ({ src, userName, size = 12 }: any) => {
         />
       ) : (
         <div
-          className={`flex items-center justify-center w-${size} h-${size} text-white text-xl font-bold uppercase`}
+          className={`flex items-center justify-center text-white text-xl font-bold uppercase w-${size} h-${size}`}
         >
           {userName.charAt()}
         </div>
