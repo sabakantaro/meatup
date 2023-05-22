@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { getUser } from "@/pages/api/user";
 
-const show = () => {
+const Show = () => {
   const { currentUser } = useContext(AuthContext);
   const [user, setUser] = React.useState<any>(null);
   const router = useRouter();
@@ -19,7 +19,7 @@ const show = () => {
     const handleGetUser = async () => {
       try {
         const res = await getUser(id as string);
-        if (res?.status === 200) {
+        if (res) {
           setUser(res?.data.user as any);
         } else {
           console.log("No user");
@@ -155,28 +155,4 @@ const show = () => {
   );
 };
 
-export default show;
-
-// export async function getServerSideProps(context: any) {
-//   const { query } = context;
-//   const { id } = query;
-
-//   try {
-//     const result = await fetch(
-//       (process.env.NEXT_PUBLIC_AUTH_URL as string) + `/users/${id}`
-//     ).then((res) => res.json());
-
-//     return {
-//       props: {
-//         result,
-//       },
-//     };
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//     return {
-//       props: {
-//         result: {},
-//       },
-//     };
-//   }
-// }
+export default Show;

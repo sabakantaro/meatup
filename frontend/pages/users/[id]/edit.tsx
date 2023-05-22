@@ -28,7 +28,7 @@ const Edit = () => {
     const handleGetUser = async () => {
       try {
         const res = await getUser(id as string);
-        if (res?.status === 200) {
+        if (res) {
           setUser(res?.data.user as any);
         } else {
           console.log("No user");
@@ -174,27 +174,3 @@ const Edit = () => {
 };
 
 export default Edit;
-
-// export async function getServerSideProps(context: any) {
-//   const { query } = context;
-//   const { id } = query;
-
-//   try {
-//     const result = await fetch(
-//       (process.env.NEXT_PUBLIC_AUTH_URL as string) + `/users/${id}`
-//     ).then((res) => res.json());
-
-//     return {
-//       props: {
-//         result,
-//       },
-//     };
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//     return {
-//       props: {
-//         result: {},
-//       },
-//     };
-//   }
-// }

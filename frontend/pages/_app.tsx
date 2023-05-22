@@ -64,8 +64,9 @@ export default function App({ Component, pageProps }: AppProps) {
   // Redirect unauthenticated users to the sign-in page
   useEffect(() => {
     if (
-      (!loading && !isSignedIn && router.pathname === "/events/create") ||
-      router.pathname === "/place"
+      !loading &&
+      !isSignedIn &&
+      (router.pathname === "/events/create" || router.pathname === "/place")
     ) {
       router.push("/signin");
     }
