@@ -6,13 +6,34 @@ import Map from "@/components/Map";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
 import Head from "next/head";
+import { getEvents } from "./api/event";
 
-function Search({ searchResults = [] }: any) {
+function Search() {
   const router = useRouter();
   const { location, date }: any = router.query;
   const formattedDate = date && format(new Date(date), "dd MMMM");
+  const [events, setEvents] = React.useState<any>([]);
 
-  let searchEvents = searchResults?.events?.filter((item: any) => {
+  React.useEffect(() => {
+    const handleGetEvents = async () => {
+      try {
+        const res = await getEvents();
+        console.log(res);
+
+        if (res?.status === 200) {
+          setEvents(res?.data.events as any);
+        } else {
+          console.log("No events");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    handleGetEvents();
+  }, []);
+
+  let searchEvents = events?.filter((item: any) => {
     const itemDate = new Date(item?.meeting_datetime);
     const searchDate = date ? new Date(date) : null;
     const lowercaseLocation = location?.toLowerCase();
@@ -56,7 +77,7 @@ function Search({ searchResults = [] }: any) {
         </section>
         {searchEvents.length > 0 && (
           <section className='hidden xl:inline-flex xl:min-w-[600px]'>
-            <Map events={searchResults?.events} />
+            <Map events={events} />
           </section>
         )}
       </main>
@@ -67,22 +88,22 @@ function Search({ searchResults = [] }: any) {
 
 export default Search;
 
-export async function getServerSideProps() {
-  try {
-    const searchResults = await fetch(
-      (process.env.NEXT_PUBLIC_AUTH_URL as string) + "/events"
-    ).then((res) => res.json());
-    return {
-      props: {
-        searchResults,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return {
-      props: {
-        searchResults: {},
-      },
-    };
-  }
-}
+// export async function getServerSideProps() {
+//   try {
+//     const searchResults = await fetch(
+//       (process.env.NEXT_PUBLIC_AUTH_URL as string) + "/events"
+//     ).then((res) => res.json());
+//     return {
+//       props: {
+//         searchResults,
+//       },
+//     };
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//     return {
+//       props: {
+//         searchResults: {},
+//       },
+//     };
+//   }
+// }
