@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { createPlace } from "@/pages/api/place";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 const borderStyles = {
   borderColor: "gray-400",
@@ -50,62 +53,85 @@ const PostForm = () => {
 
   return (
     <>
-      <form className='flex flex-col' onSubmit={handleCreatePost}>
+      <Header />
+      <form
+        className='flex flex-col max-w-screen-sm mx-auto py-5'
+        onSubmit={handleCreatePost}
+      >
+        <h1 className='text-2xl font-semibold mb-4'>Create Place</h1>
+        <h4 className='text-lg font-semibold mb-4'>Location</h4>
         <textarea
-          placeholder='Hello World'
+          placeholder='location'
           className='border border-gray-300 rounded-md p-2 mb-4'
           rows={4}
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
+        <h4 className='text-lg font-semibold mb-4'>Latitude</h4>
         <input
           type='float'
-          placeholder='Hello World'
+          placeholder='latitude'
           className='border border-gray-300 rounded-md p-2 mb-4'
           value={latitude}
           onChange={(e: any) => setLatitude(e.target.value)}
         />
+        <h4 className='text-lg font-semibold mb-4'>Longitude</h4>
         <input
           type='float'
-          placeholder='Hello World'
+          placeholder='longitude'
           className='border border-gray-300 rounded-md p-2 mb-4'
           value={longitude}
           onChange={(e: any) => setLongitude(e.target.value)}
         />
+        <h4 className='text-lg font-semibold mb-4'>Image</h4>
         <div className='mb-4'>
-          <label htmlFor='icon-button-file' className='cursor-pointer'>
-            <input
-              accept='image/*'
-              id='icon-button-file'
-              type='file'
-              className='hidden'
-              onChange={(e) => {
-                uploadImage(e);
-                previewImage(e);
-              }}
-            />
-            Upload Image
-          </label>
+          {preview && (
+            <div className='border border-gray-300 rounded-md p-2 mb-4'>
+              <img src={preview} alt='Preview' className='w-full' />
+            </div>
+          )}
+          <div className='flex items-center mb-4'>
+            <label htmlFor='icon-button-file' className='cursor-pointer'>
+              <input
+                accept='image/*'
+                id='icon-button-file'
+                type='file'
+                className='hidden'
+                onChange={(e) => {
+                  uploadImage(e);
+                  previewImage(e);
+                }}
+              />
+              <span className='bg-gray-200 text-gray-500 p-3 rounded-md'>
+                Upload Image
+              </span>
+            </label>
+            <div className='flex items-center'>
+              {preview && (
+                <button
+                  type='button'
+                  id='removeImage'
+                  className='bg-gray-200 text-gray-500 p-2.5 rounded-md ml-4'
+                  onClick={() => {
+                    setImage(null);
+                    setPreview("");
+                  }}
+                >
+                  <TrashIcon className='h-6 w-6' />
+                </button>
+              )}
+            </div>
+          </div>
         </div>
         <button
           type='submit'
-          className='bg-blue-500 text-white py-2 px-4 rounded-md self-start'
+          className='bg-red-500 text-white py-2 px-4 rounded-md self-start'
           disabled={!location || location.length > 140}
         >
           Post
         </button>
       </form>
-      {preview && (
-        <div className='border border-gray-400 rounded-md mt-8 p-2'>
-          <button
-            className='absolute top-0 right-0 p-2 text-red-500 hover:text-red-700'
-            onClick={() => setPreview("")}
-          >
-            Remove
-          </button>
-          <img src={preview} alt='Preview' className='w-full' />
-        </div>
-      )}
+      <Footer />
     </>
   );
 };

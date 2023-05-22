@@ -15,10 +15,19 @@ import Comments from "@/components/events/Comments";
 const Show = () => {
   const { currentUser } = useContext(AuthContext);
   const [event, setEvent] = useState<any>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState("");
   const router = useRouter();
   const { id } = router.query;
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = event?.place?.image?.url;
+    img.onload = () => {
+      setImageLoaded(true);
+    };
+  }, [event]);
 
   const handleGetEvent = useCallback(async () => {
     try {
@@ -72,14 +81,21 @@ const Show = () => {
       <TitleHeader title={event?.title} hostName={event?.user?.name} />
       <div className='bg-gray-100 min-h-screen overflow-auto'>
         <div className='container mx-auto md:px-4 max-w-6xl'>
-          <div className='grid grid-cols-2 md:grid-cols-3 gap-8'>
+          <div className='grid grid-cols-1 md:grid-cols-3'>
+            <div className='md:hidden inline p-4 mt-4'>
+              {event && <Summary event={event} />}
+            </div>
             <div className='md:p-4 lg:pr-16 col-span-2'>
-              <img
-                className='h-64 md:h-96 w-full object-cover pt-4'
-                src={event?.place?.image.url}
-                alt='event image'
-              />
-              <div className='py-4'>
+              {!imageLoaded ? (
+                <div className='animate-pulse bg-gray-200 rounded-lg h-64 md:h-96 w-full object-cover md:pt-4' />
+              ) : (
+                <img
+                  className='h-64 md:h-96 w-full object-cover md:pt-4'
+                  src={event?.place?.image.url}
+                  alt='event image'
+                />
+              )}
+              <div className='px-6 sm:px-4 xl:px-0 md:max-w-screen w-full mt-5'>
                 <h3 className='text-xl font-bold mb-5'>Description</h3>
                 <p className='whitespace-pre-wrap'>{event?.description}</p>
               </div>
@@ -108,7 +124,7 @@ const Show = () => {
                 <div className='pl-12 sm:pl-15'>
                   <div className='w-full relative mb-8'>
                     <div className='flex'>
-                      <div className='hidden md:block xmedia'>
+                      <div className='hidden md:block'>
                         {currentUser && <Avatar userName={currentUser?.name} />}
                       </div>
                       <div className='flex flex-col flex-1 ml-4 sm:ml-5'>
@@ -166,7 +182,9 @@ const Show = () => {
                 </div>
               </div>
             </div>
-            <div className='p-4 mt-4'>{event && <Summary event={event} />}</div>
+            <div className='hidden md:block p-4 mt-4'>
+              {event && <Summary event={event} />}
+            </div>
           </div>
         </div>
       </div>

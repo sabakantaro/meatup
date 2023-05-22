@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :participants, only: %i[create destroy]
       resources :chatrooms, only: %i[index show]
       resources :messages, only: %i[create]
+      resources :notifications, only: %i[index update]
 
       namespace :auth do
         resources :sessions, only: %i[index]

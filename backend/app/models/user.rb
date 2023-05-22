@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_many :chatroom_users, dependent: :destroy
   has_many :chatrooms, through: :chatroom_users, dependent: :destroy
   has_many :messages, dependent: :destroy
+  has_many :notifications, dependent: :destroy
 
   mount_uploader :image, ImageUploader
 
@@ -29,7 +30,8 @@ class User < ActiveRecord::Base
           ]
         },
         comments: { only: %i[id content] },
-        bookmarks: { only: %i[id event_id] }
+        bookmarks: { only: %i[id event_id] },
+        notifications: { only: %i[id content image_url link_url is_checked created_at] }
       ],
     )
   end

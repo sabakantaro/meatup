@@ -1,4 +1,5 @@
 class Api::V1::ParticipantsController < ApplicationController
+  include NotificationConcern
   def create
     participant = Participant.create(participants_params)
     create_chatroom(participant)

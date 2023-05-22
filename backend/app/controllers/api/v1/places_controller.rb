@@ -1,7 +1,7 @@
 class Api::V1::PlacesController < ApplicationController
   before_action :set_place, only: %i[destroy]
   def index
-    render json: { places: Place.all }, status: 200
+    render json: { places: Place.all.as_json }, status: 200
   end
 
   def create

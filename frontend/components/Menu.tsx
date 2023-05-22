@@ -1,5 +1,4 @@
-import { useState, Fragment } from "react";
-import { Bars3Icon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 
 function classNames(...classes: any) {

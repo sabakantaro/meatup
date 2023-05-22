@@ -1,28 +1,39 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 function SmallCard({ item }: any) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const image = new Image();
-    image.src = item.image;
-    image.onload = () => {
+    const img = new Image();
+    img.src = item?.place?.image?.url;
+    img.onload = () => {
       setImageLoaded(true);
     };
-  }, [item.image]);
+  }, [item]);
 
   return (
-    <div className="flex items-center m-2 mt-5 space-x-4 rounded-xl cursor-pointer hover:bg-gray-100 hover:scale-105 transition transform duration-200 ease-out">
+    <div
+      className='flex items-center m-2 mt-5 space-x-4 rounded-xl cursor-pointer hover:bg-gray-100 hover:scale-105 transition transform duration-200 ease-out'
+      onClick={() => router.push(`/events/${item.id}/show`)}
+    >
       {!imageLoaded ? (
-        <div className="animate-pulse bg-gray-200 rounded-lg h-16 w-16" />
+        <div className='animate-pulse bg-gray-200 rounded-lg h-16 w-16' />
       ) : (
-        <div className="relative h-16 w-16">
-          <img alt="" src={item.image} className="rounded-lg" />
+        <div className='relative h-16 w-16'>
+          <img
+            alt=''
+            src={item?.place?.image?.url}
+            className='rounded-lg h-16 w-16'
+          />
         </div>
       )}
       <div>
-        <h2>{item.location}</h2>
-        <h3>{item.distance}</h3>
+        <h2 className='overflow-ellipsis line-clamp-1'>{item.title}</h2>
+        <h3 className='overflow-ellipsis line-clamp-1'>
+          {item.place.location}
+        </h3>
       </div>
     </div>
   );

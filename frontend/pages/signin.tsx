@@ -81,7 +81,7 @@ const SignIn: React.FC = () => {
         </div>
         <div className='flex items-center justify-between'>
           <button
-            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
+            className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
             type='submit'
             disabled={!email || !password}
             onSubmit={handleSubmit}
@@ -89,7 +89,7 @@ const SignIn: React.FC = () => {
             Sign In
           </button>
           <a
-            className='inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800'
+            className='inline-block align-baseline font-bold text-sm text-red-500 hover:text-blue-800'
             href='/signup'
           >
             Create an account

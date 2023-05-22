@@ -3,6 +3,7 @@ import { createEvent } from "@/pages/api/event";
 import { getPlaces } from "@/pages/api/place";
 import { AuthContext } from "../_app";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const PostForm = () => {
   const { currentUser } = useContext(AuthContext);
@@ -57,7 +58,7 @@ const PostForm = () => {
   return (
     <>
       <Header />
-      <div className='container mx-auto px-4 py-8'>
+      <div className='container mx-auto px-4 py-8 max-w-screen-sm'>
         <form onSubmit={handleCreatePost}>
           <div className='mb-4'>
             <label
@@ -127,7 +128,7 @@ const PostForm = () => {
           <div className='mb-4'>
             <button
               type='submit'
-              className='bg-blue-500 text-white py-2 px-4 rounded-md self-start'
+              className='bg-red-500 text-white py-2 px-4 rounded-md self-start'
               disabled={!description || description.length > 140}
             >
               Post
@@ -135,6 +136,7 @@ const PostForm = () => {
           </div>
         </form>
       </div>
+      <Footer />
     </>
   );
 };
