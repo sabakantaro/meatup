@@ -7,25 +7,39 @@ import { useRouter } from "next/router";
 import { updateUser } from "@/pages/api/user";
 import moment from "moment";
 import Head from "next/head";
+import { getUser } from "@/pages/api/user";
 
-type Props = {
-  result: any;
-};
-
-const show = ({ result }: Props) => {
+const Edit = () => {
   const { currentUser } = useContext(AuthContext);
+  const [user, setUser] = React.useState<any>(null);
   const router = useRouter();
   const { id } = router.query;
-  const [name, setName] = useState(result?.user?.name);
-  const [profile, setProfile] = useState(result?.user?.profile);
-  const [image, setImage] = useState(result?.user?.image?.url);
-  const [preview, setPreview] = useState(result?.user?.image?.url);
+  const [name, setName] = useState(user?.name);
+  const [profile, setProfile] = useState(user?.profile);
+  const [image, setImage] = useState(user?.image?.url);
+  const [preview, setPreview] = useState(user?.image?.url);
   const [birthDate, setBirthDate] = useState(
-    result?.user?.birth_date &&
-      moment(result?.user?.birth_date).format("YYYY-MM-DD")
+    user?.birth_date && moment(user?.birth_date).format("YYYY-MM-DD")
   );
-  const [gender, setGender] = useState(result?.user?.gender);
+  const [gender, setGender] = useState(user?.gender);
   console.log(birthDate);
+
+  React.useEffect(() => {
+    const handleGetUser = async () => {
+      try {
+        const res = await getUser(id as string);
+        if (res?.status === 200) {
+          setUser(res?.data.user as any);
+        } else {
+          console.log("No user");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    handleGetUser();
+  }, [id, router]);
 
   const uploadImage = useCallback((e: any) => {
     const file = e.target.files[0];
@@ -44,7 +58,7 @@ const show = ({ result }: Props) => {
     formData.append("user[profile]", profile as any);
     formData.append("user[birth_date]", birthDate as any);
     formData.append("user[gender]", gender as any);
-    if (image !== result?.user?.image?.url) {
+    if (image !== user?.image?.url) {
       formData.append("user[image]", image);
     }
 
@@ -71,7 +85,7 @@ const show = ({ result }: Props) => {
   return (
     <>
       <Head>
-        <title>{result?.user?.name || "User"} | Meatup</title>
+        <title>{user?.name || "User"} | Meatup</title>
         <link rel='icon' href='/meatup_logo.png' />
       </Head>
       <Header />
@@ -81,7 +95,7 @@ const show = ({ result }: Props) => {
           <div className='flex flex-col md:flex-row space-x-0 md:space-x-6 space-y-3 md:space-y-0 items-center w-full'>
             <div className='relative flex flex-col'>
               <AvatarLarge
-                userName={result?.user?.name}
+                userName={user?.name}
                 src={preview || ""}
                 size={32}
               />
@@ -159,28 +173,28 @@ const show = ({ result }: Props) => {
   );
 };
 
-export default show;
+export default Edit;
 
-export async function getServerSideProps(context: any) {
-  const { query } = context;
-  const { id } = query;
+// export async function getServerSideProps(context: any) {
+//   const { query } = context;
+//   const { id } = query;
 
-  try {
-    const result = await fetch(
-      (process.env.NEXT_PUBLIC_AUTH_URL as string) + `/users/${id}`
-    ).then((res) => res.json());
+//   try {
+//     const result = await fetch(
+//       (process.env.NEXT_PUBLIC_AUTH_URL as string) + `/users/${id}`
+//     ).then((res) => res.json());
 
-    return {
-      props: {
-        result,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return {
-      props: {
-        result: {},
-      },
-    };
-  }
-}
+//     return {
+//       props: {
+//         result,
+//       },
+//     };
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//     return {
+//       props: {
+//         result: {},
+//       },
+//     };
+//   }
+// }
