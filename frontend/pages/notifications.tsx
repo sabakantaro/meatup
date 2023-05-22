@@ -5,6 +5,7 @@ import { getNotifications, updateNotification } from "@/pages/api/notification";
 import { Notification } from "@/typings";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Head from "next/head";
 
 const NotificationsList = () => {
   const [loading, setLoading] = useState(true);
@@ -44,6 +45,10 @@ const NotificationsList = () => {
 
   return (
     <>
+      <Head>
+        <title>Meatup | Notification Page</title>
+        <link rel='icon' href='/meatup_logo.png' />
+      </Head>
       <Header />
       <div className='bg-gray-100 gap-4 h-screen max-w-screen-md m-auto'>
         {!loading ? (

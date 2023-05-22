@@ -6,6 +6,7 @@ import { AuthContext } from "@/pages/_app";
 import { signUp } from "@/pages/api/auth";
 import { SignUpData } from "@/typings";
 import Header from "@/components/Header";
+import Head from "next/head";
 
 const SignUp: React.FC = () => {
   const router = useRouter();
@@ -50,6 +51,10 @@ const SignUp: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <title>Meatup | Sign Up Page</title>
+        <link rel='icon' href='/meatup_logo.png' />
+      </Head>
       <Header />
       <form
         noValidate

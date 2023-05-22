@@ -3,6 +3,7 @@ import { createPlace } from "@/pages/api/place";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import Head from "next/head";
 
 const borderStyles = {
   borderColor: "gray-400",
@@ -53,6 +54,10 @@ const PostForm = () => {
 
   return (
     <>
+      <Head>
+        <title>Meatup | Create Place Page</title>
+        <link rel='icon' href='/meatup_logo.png' />
+      </Head>
       <Header />
       <form
         className='flex flex-col max-w-screen-sm mx-auto py-5'

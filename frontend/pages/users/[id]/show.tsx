@@ -5,6 +5,7 @@ import AvatarLarge from "@/components/users/AvatarLarge";
 import moment from "moment";
 import { AuthContext } from "@/pages/_app";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 type Props = {
   result: any;
@@ -18,6 +19,10 @@ const show = ({ result }: Props) => {
 
   return (
     <>
+      <Head>
+        <title>{result?.user?.name || "User"} | Meetup</title>
+        <link rel='icon' href='/meatup_logo.png' />
+      </Head>
       <Header />
       <div className='w-full max-w-screen-sm mx-auto px-4 md:px-8 my-6'>
         <div className='flex flex-col items-center justify-center mt-5 border-b-2 pb-10'>

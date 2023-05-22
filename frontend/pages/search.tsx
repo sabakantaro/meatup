@@ -5,6 +5,7 @@ import InfoCard from "@/components/events/InfoCard";
 import Map from "@/components/Map";
 import { useRouter } from "next/router";
 import { format } from "date-fns";
+import Head from "next/head";
 
 function Search({ searchResults = [] }: any) {
   const router = useRouter();
@@ -27,7 +28,11 @@ function Search({ searchResults = [] }: any) {
   });
 
   return (
-    <div>
+    <>
+      <Head>
+        <title>Meatup | Search Events Page</title>
+        <link rel='icon' href='/meatup_logo.png' />
+      </Head>
       <Header placeholder={`${location} | ${formattedDate}`} />
       <main className='flex min-h-[400px]'>
         <section className='flex-grow pt-14'>
@@ -56,7 +61,7 @@ function Search({ searchResults = [] }: any) {
         )}
       </main>
       <Footer />
-    </div>
+    </>
   );
 }
 
