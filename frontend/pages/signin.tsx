@@ -22,11 +22,13 @@ const SignIn: React.FC = () => {
       password: password,
     };
 
+    console.log(data);
+
     try {
       const res = await signIn(data);
       console.log(res);
 
-      if (res.status === 200) {
+      if (res) {
         Cookies.set("_access_token", res.headers["access-token"]);
         Cookies.set("_client", res.headers["client"]);
         Cookies.set("_uid", res.headers["uid"]);
@@ -89,7 +91,7 @@ const SignIn: React.FC = () => {
             className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
             type='submit'
             disabled={!email || !password}
-            onSubmit={handleSubmit}
+            onClick={(e: any) => handleSubmit(e)}
           >
             Sign In
           </button>
