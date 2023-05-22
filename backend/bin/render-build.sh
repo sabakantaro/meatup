@@ -9,7 +9,7 @@ gem update --system
 gem install bundler
 
 # Install project dependencies
-bundle install
+bundle update
 
 # Run any necessary build commands
 bundle exec rake db:migrate
