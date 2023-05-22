@@ -19,5 +19,4 @@ export BUNDLE_GEMFILE=$RENDER_SRC_ROOT/backend/Gemfile
 set_ruby_env $(fetch_or_build "$RUBY_VERSION")
 gem install bundler
 gem update --system
-bundle install
-bundle exec rake db:migrate
+cd backend && bundle install && bundle exec rake db:migrate
