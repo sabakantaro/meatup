@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import router from "next/router";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Head from "next/head";
 
 type Props = {};
 
@@ -29,6 +30,10 @@ function signout({}: Props) {
 
   return (
     <>
+      <Head>
+        <title>Meatup | Sign Out Page</title>
+        <link rel='icon' href='/meatup_logo.png' />
+      </Head>
       <Header />
       <div className='flex flex-col items-center h-screen bg-gray-100'>
         <div className='flex flex-col items-center justify-center bg-white rounded-lg p-10 mt-10'>

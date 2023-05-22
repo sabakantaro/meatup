@@ -6,6 +6,7 @@ import { AuthContext } from "@/pages/_app";
 import { useRouter } from "next/router";
 import { updateUser } from "@/pages/api/user";
 import moment from "moment";
+import Head from "next/head";
 
 type Props = {
   result: any;
@@ -69,6 +70,10 @@ const show = ({ result }: Props) => {
 
   return (
     <>
+      <Head>
+        <title>{result?.user?.name || "User"} | Meatup</title>
+        <link rel='icon' href='/meatup_logo.png' />
+      </Head>
       <Header />
       <div className='w-full max-w-screen-sm mx-auto px-4 md:px-8 my-6'>
         <main className='flex flex-col space-y-3 items-start flex-grow lg:px-15'>

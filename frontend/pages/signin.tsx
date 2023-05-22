@@ -6,6 +6,7 @@ import { AuthContext } from "@/pages/_app";
 import { signIn } from "@/pages/api/auth";
 import { SignInData } from "@/typings";
 import Header from "@/components/Header";
+import Head from "next/head";
 
 const SignIn: React.FC = () => {
   const router = useRouter();
@@ -42,6 +43,10 @@ const SignIn: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <title>Meatup | Sign In Page</title>
+        <link rel='icon' href='/meatup_logo.png' />
+      </Head>
       <Header />
       <form className='bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-xs mx-auto'>
         <h2 className='text-2xl font-bold text-center mb-6'>Sign In</h2>

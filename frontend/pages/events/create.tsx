@@ -4,6 +4,7 @@ import { getPlaces } from "@/pages/api/place";
 import { AuthContext } from "../_app";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Head from "next/head";
 
 const PostForm = () => {
   const { currentUser } = useContext(AuthContext);
@@ -57,6 +58,10 @@ const PostForm = () => {
 
   return (
     <>
+    <Head>
+        <title>Meatup | Create Event Page</title>
+        <link rel='icon' href='/meatup_logo.png' />
+    </Head>
       <Header />
       <div className='container mx-auto px-4 py-8 max-w-screen-sm'>
         <form onSubmit={handleCreatePost}>

@@ -10,6 +10,7 @@ import moment from "moment";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
+import Head from "next/head";
 
 const Chatroom = () => {
   const { currentUser } = useContext(AuthContext);
@@ -58,6 +59,10 @@ const Chatroom = () => {
 
   return (
     <>
+      <Head>
+        <title>Meatup | Chatroom - {id}</title>
+        <link rel='icon' href='/meatup_logo.png' />
+      </Head>
       <Header />
       {!loading ? (
         <div className='flex flex-col flex-grow bg-gray-100 max-w-screen-md m-auto shadow-sm'>
