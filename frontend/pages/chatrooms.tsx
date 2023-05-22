@@ -28,7 +28,7 @@ const Chatrooms = () => {
   }, [handleGetChatrooms]);
 
   return (
-    <div className="bg-gray-100">
+    <div className='bg-gray-100'>
       <Header />
       {!loading ? (
         chatrooms.length > 0 ? (
@@ -46,7 +46,6 @@ const Chatrooms = () => {
                     <Avatar
                       src={chatroom.otherUser?.image.url}
                       userName={chatroom.otherUser?.name}
-                      size={12}
                     />
                   </div>
                   <div className='flex flex-col flex-grow'>
@@ -66,7 +65,16 @@ const Chatrooms = () => {
             ))}
           </div>
         ) : (
-          <p className='text-sm text-gray-500'>No users</p>
+          <div className='flex flex-col items-center justify-center min-h-[400px]'>
+            <div>
+              <img
+                src='/meatup_logo.png'
+                alt='empty'
+                className='object-contain h-10 grayscale'
+              />
+            </div>
+            <p className='text-gray-500 pt-3'>No chat for now.</p>
+          </div>
         )
       ) : null}
       <Footer />

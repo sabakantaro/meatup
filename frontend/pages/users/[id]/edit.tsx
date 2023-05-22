@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import React, { useCallback, useContext, useState } from "react";
-import Avatar from "@/components/users/Avatar";
+import AvatarLarge from "@/components/users/AvatarLarge";
 import { AuthContext } from "@/pages/_app";
 import { useRouter } from "next/router";
 import { updateUser } from "@/pages/api/user";
@@ -20,11 +20,11 @@ const show = ({ result }: Props) => {
   const [image, setImage] = useState(result?.user?.image?.url);
   const [preview, setPreview] = useState(result?.user?.image?.url);
   const [birthDate, setBirthDate] = useState(
-    result?.user?.birthDate
-      ? moment(result?.user?.birthDate).format("YYYY-MM-DD")
-      : ""
+    result?.user?.birth_date &&
+      moment(result?.user?.birth_date).format("YYYY-MM-DD")
   );
   const [gender, setGender] = useState(result?.user?.gender);
+  console.log(birthDate);
 
   const uploadImage = useCallback((e: any) => {
     const file = e.target.files[0];
@@ -75,7 +75,7 @@ const show = ({ result }: Props) => {
           <h1 className='text-3xl font-bold mb-6'>Edit profile</h1>
           <div className='flex flex-col md:flex-row space-x-0 md:space-x-6 space-y-3 md:space-y-0 items-center w-full'>
             <div className='relative flex flex-col'>
-              <Avatar
+              <AvatarLarge
                 userName={result?.user?.name}
                 src={preview || ""}
                 size={32}

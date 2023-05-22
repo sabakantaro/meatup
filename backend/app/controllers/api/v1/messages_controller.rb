@@ -1,4 +1,5 @@
 class Api::V1::MessagesController < ApplicationController
+  include NotificationConcern
   def create
     message = Message.new(message_params)
 

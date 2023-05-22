@@ -86,9 +86,8 @@ const Chatroom = () => {
                     {!isSentByCurrentUser && (
                       <div className='flex items-end justify-center pr-3'>
                         <Avatar
-                          userName={otherUser?.name || "Meatup User"}
+                          userName={otherUser?.name}
                           src={otherUser?.image?.url || ""}
-                          size={10}
                         />
                       </div>
                     )}

@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import React, { useContext } from "react";
-import Avatar from "@/components/users/Avatar";
+import AvatarLarge from "@/components/users/AvatarLarge";
 import moment from "moment";
 import { AuthContext } from "@/pages/_app";
 import { useRouter } from "next/router";
@@ -14,13 +14,14 @@ const show = ({ result }: Props) => {
   const { currentUser } = useContext(AuthContext);
   const router = useRouter();
   const { id } = router.query;
+  const noEvents = result?.user?.events?.length === 0;
 
   return (
     <>
       <Header />
       <div className='w-full max-w-screen-sm mx-auto px-4 md:px-8 my-6'>
         <div className='flex flex-col items-center justify-center mt-5 border-b-2 pb-10'>
-          <Avatar
+          <AvatarLarge
             userName={result?.user?.name || ""}
             src={result?.user?.image.url}
             size={32}
@@ -77,14 +78,14 @@ const show = ({ result }: Props) => {
             <div className='flex flex-row space-x-2 md:space-x-4 items-center'>
               <a className='font-normal hover:no-underline hover:text-teal-700 text-center space-x-2 cursor-pointer'>
                 <div className='inline-block bg-teal-700 text-white text-sm rounded-full px-2 pt-0.5'>
-                  {result?.user?.events?.length > 0
-                    ? result?.user?.events?.length
-                    : 0}
+                  {!noEvents ? result?.user?.events?.length : 0}
                 </div>
-                <span>
-                  {result?.user?.events?.length > 0
-                    ? "Organised"
-                    : "Become a Host"}
+                <span
+                  onClick={() => {
+                    noEvents && router.push("/events/create");
+                  }}
+                >
+                  {!noEvents ? "Organised" : "Become a Host"}
                 </span>
               </a>
             </div>
@@ -100,7 +101,7 @@ const show = ({ result }: Props) => {
             </div>
           </div>
         </div>
-        {result?.user?.events?.length > 0 && (
+        {!noEvents && (
           <div className='flex flex-col mt-5 pb-10'>
             <h2 id='groups-title' className='text-3xl font-bold mb-6'>
               Organised

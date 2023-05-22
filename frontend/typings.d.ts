@@ -81,3 +81,13 @@ export interface Message {
   content: string
   createdAt?: Date
 }
+
+export interface Notification {
+  map(arg0: (notification: any) => JSX.Element): import("react").ReactNode
+  id?: number
+  isChecked: boolean
+  linkUrl: string
+  imageUrl?: string
+  content: string
+  length: number
+}

@@ -96,7 +96,7 @@ const SignUp: React.FC = () => {
           </div>
           <div className='text-center'>
             <button
-              className='bg-blue-500 text-white py-2 px-4 rounded-md w-full'
+              className='bg-red-500 text-white py-2 px-4 rounded-md w-full'
               disabled={!name || !email || !password || !passwordConfirmation}
               onClick={handleSubmit}
             >

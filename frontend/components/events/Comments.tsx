@@ -9,6 +9,13 @@ type Props = {
 
 const Comments = ({ comment, handleDeleteComment }: Props) => {
   const [isVisible, setIsVisivle] = React.useState(false);
+  const currentDate: any = new Date();
+  const createdDate: any = new Date(comment?.createdAt);
+  const timeDifference = Math.floor(
+    (currentDate - createdDate) / (1000 * 60 * 60 * 24)
+  );
+  const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  const formattedTimeDifference = formatter.format(-timeDifference, "day");
 
   return (
     <>
@@ -52,7 +59,7 @@ const Comments = ({ comment, handleDeleteComment }: Props) => {
               <div className='flex items-center'>
                 <div className='pl-2'>
                   <p className='text-xs sm:text-sm text-gray6 pr-1'>
-                    4 days ago
+                    {formattedTimeDifference}
                   </p>
                 </div>
               </div>
@@ -67,13 +74,19 @@ const Comments = ({ comment, handleDeleteComment }: Props) => {
             <>
               <div
                 className='hover:text-gray-500 cursor-pointer p-1'
-                onClick={() => console.log("Reported")}
+                onClick={() => {
+                  console.log("Reported");
+                  setIsVisivle(false);
+                }}
               >
                 Report
               </div>
               <div
                 className='hover:text-gray-500 cursor-pointer p-1'
-                onClick={handleDeleteComment}
+                onClick={() => {
+                  handleDeleteComment;
+                  setIsVisivle(false);
+                }}
               >
                 Delete
               </div>

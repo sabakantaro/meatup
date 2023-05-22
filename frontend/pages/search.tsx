@@ -7,23 +7,35 @@ import { useRouter } from "next/router";
 import { format } from "date-fns";
 
 function Search({ searchResults = [] }: any) {
-  console.log(searchResults.events);
   const router = useRouter();
-  const { location, startDate, endDate, noOfGuests }: any = router.query;
-  const formattedStartDate =
-    startDate && format(new Date(startDate), "dd MMMM yy");
-  const formattedEndDate = endDate && format(new Date(endDate), "dd MMMM yy");
-  const range = `${formattedStartDate} - ${formattedEndDate}`;
+  const { location, date }: any = router.query;
+  const formattedDate = date && format(new Date(date), "dd MMMM");
+
+  let searchEvents = searchResults?.events?.filter((item: any) => {
+    const itemDate = new Date(item?.meeting_datetime);
+    const searchDate = date ? new Date(date) : null;
+    const lowercaseLocation = location?.toLowerCase();
+
+    return (
+      (!lowercaseLocation ||
+        item?.place?.location?.toLowerCase().includes(lowercaseLocation)) &&
+      (!searchDate ||
+        (itemDate.getFullYear() === searchDate.getFullYear() &&
+          itemDate.getMonth() === searchDate.getMonth() &&
+          itemDate.getDate() === searchDate.getDate()))
+    );
+  });
+
   return (
     <div>
-      <Header placeholder={`${location} | ${range} | ${noOfGuests}guests`} />
-      <main className='flex'>
+      <Header placeholder={`${location} | ${formattedDate}`} />
+      <main className='flex min-h-[400px]'>
         <section className='flex-grow pt-14'>
           <p className='text-xs px-6'>
-            300+ Stays - {range} - for {noOfGuests} guests
+            {searchEvents.length}+ Events - {formattedDate}
           </p>
           <h1 className='text-3xl font-semibold mt-2 mb-6 px-6'>
-            Stay in {location}
+            Events in {location}
           </h1>
           <div className='hidden lg:inline-flex mb-5 space-x-3 text-gray-800 whitespace-nowrap px-6'>
             <p className='button'>Cancellation Flexibility</p>
@@ -32,12 +44,12 @@ function Search({ searchResults = [] }: any) {
             <p className='button'>Type of Place</p>
           </div>
           <div className='flex flex-col'>
-            {searchResults?.events?.map((item: any) => (
+            {searchEvents.map((item: any) => (
               <InfoCard key={item.id} item={item} />
             ))}
           </div>
         </section>
-        {searchResults?.events?.length > 0 && (
+        {searchEvents.length > 0 && (
           <section className='hidden xl:inline-flex xl:min-w-[600px]'>
             <Map events={searchResults?.events} />
           </section>
@@ -52,9 +64,9 @@ export default Search;
 
 export async function getServerSideProps() {
   try {
-    const searchResults = await fetch("http://127.0.0.1:5000").then((res) =>
-      res.json()
-    );
+    const searchResults = await fetch(
+      (process.env.NEXT_PUBLIC_AUTH_URL as string) + "/events"
+    ).then((res) => res.json());
     return {
       props: {
         searchResults,

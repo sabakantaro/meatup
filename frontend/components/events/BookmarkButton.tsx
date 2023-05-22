@@ -27,6 +27,9 @@ const BookmarkButton = ({ item }: Props) => {
   const handleBookmarks = useCallback(
     async (e: any) => {
       e.stopPropagation();
+      if (!isSignedIn) {
+        return;
+      }
       if (bookmark) {
         await deleteBookmark(
           String(item?.id),
