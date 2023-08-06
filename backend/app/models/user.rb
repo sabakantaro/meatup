@@ -17,22 +17,23 @@ class User < ActiveRecord::Base
 
   mount_uploader :image, ImageUploader
 
+  validates_integrity_of :image
+
+  validates :name, presence: true, length: { maximum: 20 }
+  validates :email, presence: true, length: { maximum: 50 }
+  validates :profile, length: { maximum: 500 }
+
   def as_json(_options = {})
-    super(
-      only: %i[id name email image profile birth_date gender created_at],
-      include: [
-        events: {
-          only: %i[id title description meeting_datetime],
-          include: [
-            place: {
-              only: %i[id location latitude longitude image]
-            }
-          ]
-        },
-        comments: { only: %i[id content] },
-        bookmarks: { only: %i[id event_id] },
-        notifications: { only: %i[id content image_url link_url is_checked created_at] }
-      ],
-    )
+    slice_attrs = %i[id name email image profile birth_date gender created_at]
+
+    include_attrs = {
+      events: { only: %i[id title description meeting_datetime],
+                include: { place: { only: %i[id location latitude longitude image] } } },
+      comments: { only: %i[id content] },
+      bookmarks: { only: %i[id event_id] },
+      notifications: { only: %i[id content image_url link_url is_checked created_at] }
+    }
+
+    super(only: slice_attrs, include: include_attrs)
   end
 end

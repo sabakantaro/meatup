@@ -1,12 +1,21 @@
 class Api::V1::CommentsController < ApplicationController
   def create
-    Comment.create(comment_params)
-    head 200
+    comment = Comment.new(comment_params)
+
+    if comment.save
+      render json: { comment: comment.as_json }, status: 200
+    else
+      render json: { errors: comment.errors.full_messages }, status: 500
+    end
   end
 
   def destroy
-    Comment.find(params[:id]).destroy
-    head 200
+    comment = Comment.find(params[:id])
+    if comment.destroy
+      head 200
+    else
+      head 500
+    end
   end
 
   private

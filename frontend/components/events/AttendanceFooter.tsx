@@ -20,7 +20,7 @@ function AttendanceFooter({ event }: Props) {
       event_id: event?.id,
     };
     const res: any = createParticipant(data);
-    if (res) {
+    if (res?.status === 200) {
       router.push(`/events/${event?.id}/attendance`);
     }
   };
@@ -31,7 +31,7 @@ function AttendanceFooter({ event }: Props) {
   };
 
   const isEnable =
-    // !event?.participants?.some((p: any) => p?.userId === currentUser?.id) && // Not already joined
+    !event?.participants?.some((p: any) => p?.userId === currentUser?.id) && // Not already joined
     event?.participants?.length === 0 && // No participants
     event?.user?.id !== currentUser?.id; // Not the owner
 

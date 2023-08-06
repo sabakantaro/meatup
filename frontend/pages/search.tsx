@@ -1,39 +1,38 @@
-import React from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import InfoCard from "@/components/events/InfoCard";
-import Map from "@/components/Map";
-import { useRouter } from "next/router";
-import { format } from "date-fns";
-import Head from "next/head";
-import { getEvents } from "./api/event";
+import React, { useEffect, useState } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import InfoCard from '@/components/events/InfoCard';
+import Map from '@/components/Map';
+import { useRouter } from 'next/router';
+import { format } from 'date-fns';
+import Head from 'next/head';
+import { getEvents } from './api/event';
 
 function Search() {
   const router = useRouter();
   const { location, date }: any = router.query;
-  const formattedDate = date && format(new Date(date), "dd MMMM");
-  const [events, setEvents] = React.useState<any>([]);
+  const formattedDate = date && format(new Date(date), 'dd MMMM');
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleGetEvents = async () => {
       try {
         const res = await getEvents();
-        console.log(res);
-
         if (res?.status === 200) {
-          setEvents(res?.data.events as any);
-        } else {
-          console.log("No events");
+          setEvents(res?.data.events as any[]);
         }
       } catch (err) {
         console.log(err);
+      } finally {
+        setLoading(false);
       }
     };
 
     handleGetEvents();
   }, []);
 
-  let searchEvents = events?.filter((item: any) => {
+  const filteredEvents = events?.filter((item: any) => {
     const itemDate = new Date(item?.meeting_datetime);
     const searchDate = date ? new Date(date) : null;
     const lowercaseLocation = location?.toLowerCase();
@@ -57,27 +56,42 @@ function Search() {
       <Header placeholder={`${location} | ${formattedDate}`} />
       <main className='flex min-h-[400px]'>
         <section className='flex-grow pt-14'>
-          <p className='text-xs px-6'>
-            {searchEvents.length}+ Events - {formattedDate}
-          </p>
-          <h1 className='text-3xl font-semibold mt-2 mb-6 px-6'>
-            Events in {location}
-          </h1>
-          <div className='hidden lg:inline-flex mb-5 space-x-3 text-gray-800 whitespace-nowrap px-6'>
-            <p className='button'>Cancellation Flexibility</p>
-            <p className='button'>Type of Place</p>
-            <p className='button'>Cancellation Flexibility</p>
-            <p className='button'>Type of Place</p>
-          </div>
-          <div className='flex flex-col'>
-            {searchEvents.map((item: any) => (
-              <InfoCard key={item.id} item={item} />
-            ))}
-          </div>
+          {loading ? (
+            <div className='text-center'>
+              <div
+                className='inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]'
+                role='status'
+              >
+                <span className='!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]'>
+                  Loading...
+                </span>
+              </div>
+            </div>
+          ) : (
+            <>
+              <p className='text-xs px-6'>
+                {filteredEvents.length}+ Events - {formattedDate}
+              </p>
+              <h1 className='text-3xl font-semibold mt-2 mb-6 px-6'>
+                Events in {location}
+              </h1>
+              <div className='hidden lg:inline-flex mb-5 space-x-3 text-gray-800 whitespace-nowrap px-6'>
+                <p className='button'>Cancellation Flexibility</p>
+                <p className='button'>Type of Place</p>
+                <p className='button'>Cancellation Flexibility</p>
+                <p className='button'>Type of Place</p>
+              </div>
+              <div className='flex flex-col'>
+                {filteredEvents.map((item: any) => (
+                  <InfoCard key={item.id} item={item} />
+                ))}
+              </div>
+            </>
+          )}
         </section>
-        {searchEvents.length > 0 && (
+        {!loading && filteredEvents.length > 0 && (
           <section className='hidden xl:inline-flex xl:min-w-[600px]'>
-            <Map events={events} />
+            <Map events={filteredEvents} />
           </section>
         )}
       </main>
@@ -87,23 +101,3 @@ function Search() {
 }
 
 export default Search;
-
-// export async function getServerSideProps() {
-//   try {
-//     const searchResults = await fetch(
-//       (process.env.NEXT_PUBLIC_AUTH_URL as string) + "/events"
-//     ).then((res) => res.json());
-//     return {
-//       props: {
-//         searchResults,
-//       },
-//     };
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//     return {
-//       props: {
-//         searchResults: {},
-//       },
-//     };
-//   }
-// }

@@ -1,8 +1,8 @@
-import React from "react";
-import { Event } from "@/typings";
-import moment from "moment";
-import Map from "../Map";
-import HostInfoCard from "./HostInfoCard";
+import React from 'react';
+import { Event } from '@/typings';
+import moment from 'moment';
+import Map from '../Map';
+import HostInfoCard from './HostInfoCard';
 
 type Props = {
   event: Event;
@@ -32,7 +32,7 @@ const Summary: React.FC<Props> = ({ event }: any) => {
             <p className='text-base text-gray-700'>
               {event?.meetingDatetime &&
                 moment(new Date(event?.meetingDatetime)).format(
-                  "dddd, MMMM DD, YYYY HH:mm"
+                  'dddd, MMMM DD, YYYY HH:mm'
                 )}
             </p>
           </div>
@@ -52,7 +52,7 @@ const Summary: React.FC<Props> = ({ event }: any) => {
             <p className='text-base text-gray-700'>{event?.place?.location}</p>
           </div>
         </div>
-        <div style={{ width: "100%", height: 240 }}>
+        <div style={{ width: '100%', height: 240 }}>
           <Map events={[event]} />
         </div>
       </div>

@@ -12,14 +12,16 @@ class Api::V1::ChatroomsController < ApplicationController
       }
     end
 
-    render json: { status: 200, chatrooms: chatrooms }
+    render json: { chatrooms: chatrooms }, status: 200
   end
 
   def show
+    return head 404 unless @chatroom
+
     other_user = @chatroom.users.where.not(id: current_api_v1_user.id)[0]
     messages = @chatroom.messages.order('created_at ASC')
 
-    render json: { status: 200, other_user: other_user, messages: messages }
+    render json: { other_user: other_user, messages: messages }, status: 200
   end
 
   private

@@ -5,11 +5,6 @@ import Footer from "@/components/Footer";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import Head from "next/head";
 
-const borderStyles = {
-  borderColor: "gray-400",
-  borderWidth: 1,
-};
-
 const PostForm = () => {
   const [location, setLocation] = useState("");
   const [longitude, setLongitude] = useState(0);

@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useCallback, useContext } from "react";
-import { useRouter } from "next/router";
-import Avatar from "@/components/users/Avatar";
-import { getChatroom } from "@/pages/api/chatroom";
-import { createMessage } from "@/pages/api/message";
-import { User, Message } from "@/typings";
-import { AuthContext } from "@/pages/_app";
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import moment from "moment";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { ArrowLeftIcon } from "@heroicons/react/24/solid";
-import Head from "next/head";
+import React, { useEffect, useState, useCallback, useContext } from 'react';
+import { useRouter } from 'next/router';
+import Avatar from '@/components/users/Avatar';
+import { getChatroom } from '@/pages/api/chatroom';
+import { createMessage } from '@/pages/api/message';
+import { User, Message } from '@/typings';
+import { AuthContext } from '@/pages/_app';
+import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import moment from 'moment';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import Head from 'next/head';
 
 const Chatroom = () => {
   const { currentUser } = useContext(AuthContext);
@@ -19,13 +19,15 @@ const Chatroom = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [otherUser, setOtherUser] = useState<User>();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState<string>('');
 
   const handleGetChatroom = useCallback(async () => {
     try {
+      if (!id) {
+        return;
+      }
       const res = await getChatroom(id as string);
-      console.log(res?.data.otherUser);
-      if (res) {
+      if (res?.status === 200) {
         setOtherUser(res?.data.otherUser);
         setMessages(res?.data.messages);
       }
@@ -48,9 +50,9 @@ const Chatroom = () => {
     };
     try {
       const res = await createMessage(data);
-      if (res) {
+      if (res?.status === 200) {
         setMessages([...messages, res.data.message]);
-        setContent("");
+        setContent('');
       }
     } catch (err) {
       console.log(err);
@@ -78,21 +80,21 @@ const Chatroom = () => {
               {messages.map((message, index) => {
                 const isSentByCurrentUser = message.userId === currentUser?.id;
                 const messageClass = isSentByCurrentUser
-                  ? "flex justify-end"
-                  : "flex justify-start";
+                  ? 'flex justify-end'
+                  : 'flex justify-start';
                 const bubbleClass = isSentByCurrentUser
-                  ? "bg-red-400 text-white"
-                  : "bg-gray-200";
+                  ? 'bg-red-400 text-white'
+                  : 'bg-gray-200';
                 const timeClass = isSentByCurrentUser
-                  ? "text-gray-400"
-                  : "text-gray-400";
+                  ? 'text-gray-400'
+                  : 'text-gray-400';
                 return (
                   <div key={index} className={`flex ${messageClass}`}>
                     {!isSentByCurrentUser && (
                       <div className='flex items-end justify-center pr-3'>
                         <Avatar
                           userName={otherUser?.name}
-                          src={otherUser?.image?.url || ""}
+                          src={otherUser?.image?.url || ''}
                         />
                       </div>
                     )}
@@ -110,7 +112,7 @@ const Chatroom = () => {
                     </div>
                     <div className='flex items-end justify-center pl-2'>
                       <p className={`text-xs mt-1 ${timeClass}`}>
-                        {moment(message.createdAt).format("h:mm a")}
+                        {moment(message.createdAt).format('h:mm a')}
                       </p>
                     </div>
                   </div>

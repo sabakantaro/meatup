@@ -1,7 +1,5 @@
 import React from "react";
 import { Event } from "@/typings";
-import moment from "moment";
-import Map from "../Map";
 import Avatar from "../users/Avatar";
 
 type Props = {

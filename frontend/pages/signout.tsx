@@ -1,15 +1,13 @@
-import React, { useContext } from "react";
-import { signOut } from "@/pages/api/auth";
-import { AuthContext } from "@/pages/_app";
-import Cookies from "js-cookie";
-import router from "next/router";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import Head from "next/head";
+import React, { useContext } from 'react';
+import { signOut } from '@/pages/api/auth';
+import { AuthContext } from '@/pages/_app';
+import Cookies from 'js-cookie';
+import router from 'next/router';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Head from 'next/head';
 
-type Props = {};
-
-function signout({}: Props) {
+const Signout: React.FC = () => {
   const { setIsSignedIn, setCurrentUser } = useContext(AuthContext);
 
   const handleSignOut = async () => {
@@ -18,10 +16,10 @@ function signout({}: Props) {
       if (res?.status === 200) {
         setIsSignedIn(false);
         setCurrentUser(undefined);
-        Cookies.remove("_access_token");
-        Cookies.remove("_client");
-        Cookies.remove("_uid");
-        router.push("/signin");
+        Cookies.remove('_access_token');
+        Cookies.remove('_client');
+        Cookies.remove('_uid');
+        router.push('/signin');
       }
     } catch (err) {
       console.log(err);
@@ -46,7 +44,7 @@ function signout({}: Props) {
           </button>
           <button
             className='border border-red-400 hover:bg-red-600 text-red-400 py-2 px-4 rounded w-full mt-3'
-            onClick={() => router.push("/")}
+            onClick={() => router.push('/')}
           >
             Back
           </button>
@@ -55,6 +53,6 @@ function signout({}: Props) {
       <Footer />
     </>
   );
-}
+};
 
-export default signout;
+export default Signout;

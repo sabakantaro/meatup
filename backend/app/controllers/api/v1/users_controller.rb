@@ -2,14 +2,14 @@ class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: %i[show update]
 
   def show
-    render json: { user: @user.as_json() }, status: :ok
+    render json: { user: @user.as_json }, status: 200
   end
 
   def update
     if @user.update(user_params)
-      render json: { user: @user }, status: :ok
+      render json: { user: @user }, status: 200
     else
-      render json: { user: @user.errors }, status: :internal_server_error
+      render json: { user: @user.errors }, status: 500
     end
   end
 
