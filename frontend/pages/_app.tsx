@@ -42,13 +42,9 @@ export default function App({ Component, pageProps }: AppProps) {
   const handleGetCurrentUser = async () => {
     try {
       const res = await getCurrentUser();
-      console.log(res);
-
       if (res?.status === 200) {
         setIsSignedIn(true);
         setCurrentUser(res?.data.currentUser);
-      } else {
-        console.log("No current user");
       }
     } catch (err) {
       console.log(err);

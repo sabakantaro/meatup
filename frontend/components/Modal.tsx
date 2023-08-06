@@ -1,26 +1,29 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const Modal = ({ onClose, children }: any) => {
   const modalRef = useRef(null);
   const [isOpen, setIsOpen] = useState(true);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsOpen(false);
     onClose();
-  };
+  }, [onClose]);
 
-  const handleBackgroundClick = (e: any) => {
-    // @ts-ignore
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      handleClose();
-    }
-  };
+  const handleBackgroundClick = useCallback(
+    (e: any) => {
+      // @ts-ignore
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        handleClose();
+      }
+    },
+    [modalRef]
+  );
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleBackgroundClick);
+    document.addEventListener('mousedown', handleBackgroundClick);
 
     return () => {
-      document.removeEventListener("mousedown", handleBackgroundClick);
+      document.removeEventListener('mousedown', handleBackgroundClick);
     };
   }, []);
 

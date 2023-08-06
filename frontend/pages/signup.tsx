@@ -29,8 +29,6 @@ const SignUp: React.FC = () => {
 
     try {
       const res = await signUp(data);
-      console.log(res);
-
       if (res.status === 200) {
         // Account creation and signing in simultaneously
         Cookies.set("_access_token", res.headers["access-token"]);

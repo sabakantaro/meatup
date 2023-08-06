@@ -1,12 +1,12 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import React, { useContext } from "react";
-import AvatarLarge from "@/components/users/AvatarLarge";
-import moment from "moment";
-import { AuthContext } from "@/pages/_app";
-import { useRouter } from "next/router";
-import Head from "next/head";
-import { getUser } from "@/pages/api/user";
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import React, { useContext } from 'react';
+import AvatarLarge from '@/components/users/AvatarLarge';
+import moment from 'moment';
+import { AuthContext } from '@/pages/_app';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
+import { getUser } from '@/pages/api/user';
 
 const Show = () => {
   const { currentUser } = useContext(AuthContext);
@@ -18,11 +18,12 @@ const Show = () => {
   React.useEffect(() => {
     const handleGetUser = async () => {
       try {
+        if (!id) {
+          return;
+        }
         const res = await getUser(id as string);
-        if (res) {
-          setUser(res?.data.user as any);
-        } else {
-          console.log("No user");
+        if (res?.status === 200) {
+          setUser(res?.data.user);
         }
       } catch (err) {
         console.log(err);
@@ -35,24 +36,24 @@ const Show = () => {
   return (
     <>
       <Head>
-        <title>{user?.name || "User"} | Meetup</title>
+        <title>User Profile page | Meetup</title>
         <link rel='icon' href='/meatup_logo.png' />
       </Head>
       <Header />
       <div className='w-full max-w-screen-sm mx-auto px-4 md:px-8 my-6'>
         <div className='flex flex-col items-center justify-center mt-5 border-b-2 pb-10'>
           <AvatarLarge
-            userName={user?.name || ""}
+            userName={user?.name || ''}
             src={user?.image.url}
             size={32}
           />
           <h1 className='text-4xl font-bold mt-5'>{user?.name}</h1>
           <p className='text-xl font-semibold mt-2 text-center'>
-            Member since{" "}
-            {user?.created_at ? moment(user?.created_at).format("LL") : "--"}
+            Member since{' '}
+            {user?.created_at ? moment(user?.created_at).format('LL') : '--'}
           </p>
           <p className='text-base text-gray-500 mt-3 max-w-[600px]'>
-            {user?.profile || "Np profile yet..."}
+            {user?.profile || 'Np profile yet...'}
           </p>
           <div className='flex flex-col items-center md:items-start space-y-2 pt-2'>
             <div className='flex flex-row space-x-2 items-center fill-current font-normal text-gray-500'>
@@ -70,7 +71,7 @@ const Show = () => {
                   />
                 </svg>
               </div>
-              <span>{user?.gender || "Not specified"}</span>
+              <span>{user?.gender || 'Not specified'}</span>
             </div>
           </div>
           <div className='flex flex-col items-center md:items-start space-y-2 pt-3'>
@@ -85,8 +86,8 @@ const Show = () => {
               </svg>
               <span>
                 {user?.birth_date
-                  ? moment(user?.birth_date).format("LL")
-                  : "Not detected"}
+                  ? moment(user?.birth_date).format('LL')
+                  : 'Not detected'}
               </span>
             </div>
           </div>
@@ -100,10 +101,10 @@ const Show = () => {
                 </div>
                 <span
                   onClick={() => {
-                    noEvents && router.push("/events/create");
+                    noEvents && router.push('/events/create');
                   }}
                 >
-                  {!noEvents ? "Organised" : "Become a Host"}
+                  {!noEvents ? 'Organised' : 'Become a Host'}
                 </span>
               </a>
             </div>

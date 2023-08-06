@@ -17,12 +17,8 @@ export default function Home() {
     const handleGetEvents = async () => {
       try {
         const res = await getEvents();
-        console.log(res);
-
-        if (res) {
+        if (res?.status === 200) {
           setEvents(res?.data.events as any);
-        } else {
-          console.log("No events");
         }
       } catch (err) {
         console.log(err);
@@ -36,12 +32,8 @@ export default function Home() {
     const handleGetPlaces = async () => {
       try {
         const res = await getPlaces();
-        console.log(res);
-
-        if (res) {
+        if (res?.status === 200) {
           setPlaces(res?.data.places as any);
-        } else {
-          console.log("No places");
         }
       } catch (err) {
         console.log(err);
@@ -84,30 +76,3 @@ export default function Home() {
     </div>
   );
 }
-
-// export async function getStaticProps() {
-//   try {
-//     const eventData = await fetch(
-//       (process.env.NEXT_PUBLIC_AUTH_URL as string) + "/events"
-//     ).then((res) => res.json());
-
-//     const cardsData = await fetch(
-//       (process.env.NEXT_PUBLIC_AUTH_URL as string) + "/places"
-//     ).then((res) => res.json());
-
-//     return {
-//       props: {
-//         eventData,
-//         cardsData,
-//       },
-//     };
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//     return {
-//       props: {
-//         eventData: {},
-//         cardsData: {},
-//       },
-//     };
-//   }
-// }

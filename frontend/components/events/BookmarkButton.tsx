@@ -20,10 +20,6 @@ const BookmarkButton = ({ item }: Props) => {
     }
   }, [isSignedIn, currentUser, item]);
 
-  useEffect(() => {
-    setUsersBookmarks();
-  }, [setUsersBookmarks]);
-
   const handleBookmarks = useCallback(
     async (e: any) => {
       e.stopPropagation();
@@ -52,6 +48,7 @@ const BookmarkButton = ({ item }: Props) => {
   useEffect(() => {
     setUsersBookmarks();
   }, [setUsersBookmarks]);
+
   return (
     <div>
       <div

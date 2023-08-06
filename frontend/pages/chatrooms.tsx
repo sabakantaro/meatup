@@ -36,7 +36,7 @@ const Chatrooms = () => {
       </Head>
       <div className='bg-gray-100'>
         <Header />
-        {!loading ? (
+        {!loading && (
           chatrooms.length > 0 ? (
             <div className='gap-4 h-screen max-w-screen-md m-auto'>
               {chatrooms.map((chatroom: any) => (
@@ -82,7 +82,7 @@ const Chatrooms = () => {
               <p className='text-gray-500 pt-3'>No chat for now.</p>
             </div>
           )
-        ) : null}
+        )}
         <Footer />
       </div>
     </>

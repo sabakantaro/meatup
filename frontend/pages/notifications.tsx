@@ -15,11 +15,8 @@ const NotificationsList = () => {
   const handleGetNotifications = async () => {
     try {
       const res = await getNotifications();
-
-      if (res) {
+      if (res?.status === 200) {
         setNotifications(res.data.notifications);
-      } else {
-        console.log("No notifications");
       }
     } catch (err) {
       console.log(err);
@@ -34,7 +31,7 @@ const NotificationsList = () => {
   const handleIsChecked = async (notification: Notification) => {
     try {
       const res = await updateNotification(String(notification.id));
-      if (res) {
+      if (res?.status === 200) {
         history.push(notification.linkUrl);
       }
     } catch (err) {
@@ -51,7 +48,7 @@ const NotificationsList = () => {
       </Head>
       <Header />
       <div className='bg-gray-100 gap-4 h-screen max-w-screen-md m-auto'>
-        {!loading ? (
+        {!loading && (
           notifications.length > 0 ? (
             notifications.map((notification) => {
               return (
@@ -76,11 +73,6 @@ const NotificationsList = () => {
                         <h4 className='text-xl pb-2 overflow-ellipsis line-clamp-2'>
                           {notification.content}
                         </h4>
-                        {/* <div className='mb-2'>
-                          <p className='text-sm text-gray-500 overflow-ellipsis line-clamp-1'>
-                            {notification.content}
-                          </p>
-                        </div> */}
                       </div>
                     </div>
                   </div>
@@ -99,7 +91,7 @@ const NotificationsList = () => {
               <p className='text-gray-500 pt-3'>No notifications for now.</p>
             </div>
           )
-        ) : null}
+        )}
       </div>
       <Footer />
     </>

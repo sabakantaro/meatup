@@ -1,24 +1,28 @@
 class Api::V1::PlacesController < ApplicationController
-  before_action :set_place, only: %i[destroy]
   def index
-    render json: { places: Place.all.as_json }, status: 200
+    places = Place.all.as_json
+    render json: { places: places }, status: 200
   end
 
   def create
     place = Place.new(place_params)
-    place.save
+    if place.save
+      head 200
+    else
+      head 500
+    end
   end
 
   def destroy
-    place = Place.find(params[:id])
-    place.destroy
+    place = Place.find_by(id: params[:id])
+    if place.destroy
+      head 200
+    else
+      head 500
+    end
   end
 
   private
-
-  def set_place
-    @place = Place.find(params[:id])
-  end
 
   def place_params
     params.permit(:latitude, :longitude, :location, :image)
