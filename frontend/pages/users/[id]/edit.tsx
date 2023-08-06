@@ -1,37 +1,45 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import React, { useCallback, useContext, useState } from "react";
-import AvatarLarge from "@/components/users/AvatarLarge";
-import { AuthContext } from "@/pages/_app";
-import { useRouter } from "next/router";
-import { updateUser } from "@/pages/api/user";
-import moment from "moment";
-import Head from "next/head";
-import { getUser } from "@/pages/api/user";
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import React, { useCallback, useContext, useState, useEffect } from 'react';
+import AvatarLarge from '@/components/users/AvatarLarge';
+import { AuthContext } from '@/pages/_app';
+import { useRouter } from 'next/router';
+import { updateUser } from '@/pages/api/user';
+import moment from 'moment';
+import Head from 'next/head';
+import { getUser } from '@/pages/api/user';
 
 const Edit = () => {
   const { currentUser } = useContext(AuthContext);
   const [user, setUser] = React.useState<any>(null);
   const router = useRouter();
   const { id } = router.query;
-  const [name, setName] = useState(user?.name);
-  const [profile, setProfile] = useState(user?.profile);
-  const [image, setImage] = useState(user?.image?.url);
-  const [preview, setPreview] = useState(user?.image?.url);
-  const [birthDate, setBirthDate] = useState(
-    user?.birth_date && moment(user?.birth_date).format("YYYY-MM-DD")
-  );
-  const [gender, setGender] = useState(user?.gender);
-  console.log(birthDate);
+  const [name, setName] = useState('');
+  const [profile, setProfile] = useState('');
+  const [image, setImage] = useState('');
+  const [preview, setPreview] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [gender, setGender] = useState('');
+  const saveDisabled = name === '';
+  const nameInvalid = name && 20 < name.length;
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleGetUser = async () => {
+      if (!id) {
+        return;
+      }
+
       try {
         const res = await getUser(id as string);
-        if (res) {
-          setUser(res?.data.user as any);
-        } else {
-          console.log("No user");
+        if (res?.status === 200) {
+          const { user } = res.data;
+          setUser(user);
+          setName(user.name);
+          setProfile(user.profile);
+          setImage(user.image?.url);
+          setPreview(user.image?.url);
+          setBirthDate(moment(user.birthDate)?.format('YYYY-MM-DD'));
+          setGender(user.gender);
         }
       } catch (err) {
         console.log(err);
@@ -54,12 +62,12 @@ const Edit = () => {
   const createFormData = () => {
     const formData = new FormData();
 
-    formData.append("user[name]", name);
-    formData.append("user[profile]", profile as any);
-    formData.append("user[birth_date]", birthDate as any);
-    formData.append("user[gender]", gender as any);
+    formData.append('user[name]', name);
+    formData.append('user[profile]', profile);
+    formData.append('user[birth_date]', birthDate);
+    formData.append('user[gender]', gender);
     if (image !== user?.image?.url) {
-      formData.append("user[image]", image);
+      formData.append('user[image]', image);
     }
 
     return formData;
@@ -72,7 +80,7 @@ const Edit = () => {
 
     try {
       const res = await updateUser(id as string, data);
-      if (currentUser?.id == id && res) {
+      if (currentUser?.id === id && res?.status === 200) {
         setTimeout(() => {
           router.push(`/users/${id}/show`);
         }, 500);
@@ -85,7 +93,7 @@ const Edit = () => {
   return (
     <>
       <Head>
-        <title>{user?.name || "User"} | Meatup</title>
+        <title>Meatup | User Edit page</title>
         <link rel='icon' href='/meatup_logo.png' />
       </Head>
       <Header />
@@ -96,7 +104,7 @@ const Edit = () => {
             <div className='relative flex flex-col'>
               <AvatarLarge
                 userName={user?.name}
-                src={preview || ""}
+                src={preview || ''}
                 size={32}
               />
             </div>
@@ -118,41 +126,48 @@ const Edit = () => {
               </label>
             </div>
           </div>
-          <h4 className='text-xl font-bold'>Name</h4>
+          <h4 className='block text-lg font-medium text-gray-700'>Name*</h4>
           <input
             type='text'
             id='name'
             placeholder='Your name'
             name='name'
-            className='w-full py-2 px-3 text-base rounded border outline-none placeholder:text-gray6 hover:border-gray6 focus:border-viridian pr-7 border-gray5'
+            className={`w-full py-2 px-3 text-base rounded border outline-none placeholder:text-gray-400 hover:border-gray-500 focus:border-teal-700 pr-7 border-gray-400`}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <h4 className='text-xl font-bold'>Profile</h4>
+          {nameInvalid && (
+            <p className='text-red-500 text-xs italic'>
+              Please write text within 20 letters
+            </p>
+          )}
+          <h4 className='block text-lg font-medium text-gray-700'>Profile</h4>
           <textarea
             rows={4}
             id='profile'
             placeholder='Your profile'
             name='profile'
-            className='w-full py-2 px-3 text-base rounded border outline-none placeholder:text-gray6 hover:border-gray6 focus:border-viridian pr-7 border-gray5'
+            className='w-full py-2 px-3 text-base rounded border outline-none placeholder:text-gray-400 hover:border-gray-500 focus:border-teal-700 pr-7 border-gray-400'
             value={profile}
             onChange={(e) => setProfile(e.target.value)}
           />
-          <h4 className='text-xl font-bold'>Birth date</h4>
+          <h4 className='block text-lg font-medium text-gray-700'>
+            Birth date
+          </h4>
           <input
             type='date'
             id='birthDate'
             placeholder='Your birth date'
             name='birthDate'
-            className='w-full py-2 px-3 text-base rounded border outline-none placeholder:text-gray6 hover:border-gray6 focus:border-viridian pr-7 border-gray5'
+            className='w-full py-2 px-3 text-base rounded border outline-none placeholder:text-gray-400 hover:border-gray-500 focus:border-teal-700 pr-7 border-gray-400'
             value={birthDate}
             onChange={(e) => setBirthDate(e.target.value)}
           />
-          <h4 className='text-xl font-bold'>Gender</h4>
+          <h4 className='block text-lg font-medium text-gray-700'>Gender</h4>
           <select
             id='gender'
             name='gender'
-            className='w-full py-2 px-3 text-base rounded border outline-none placeholder:text-gray6 hover:border-gray6 focus:border-viridian pr-7 border-gray5'
+            className='w-full py-2 px-3 text-base rounded border outline-none placeholder:text-gray-400 hover:border-gray-500 focus:border-teal-700 pr-7 border-gray-400'
             value={gender}
             onChange={(e) => setGender(e.target.value)}
           >
@@ -163,6 +178,8 @@ const Edit = () => {
           <button
             className='text-white bg-red-500 rounded-lg p-4 cursor-pointer'
             onClick={handleEditProfile}
+            disabled={saveDisabled}
+            style={saveDisabled ? { cursor: 'not-allowed' } : {}}
           >
             Save Changes
           </button>

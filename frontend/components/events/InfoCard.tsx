@@ -1,26 +1,12 @@
-import React, { useState, useCallback, useEffect, useContext } from "react";
-import { BookmarkIcon } from "@heroicons/react/24/solid";
-import { BookmarkIcon as BookmarkOutlineIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/router";
-import moment from "moment";
-import { AuthContext } from "@/pages/_app";
-import { createBookmark, deleteBookmark } from "@/pages/api/bookmark";
-import BookmarkButton from "./BookmarkButton";
-import ShareButton from "./ShareButton";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import moment from 'moment';
+import BookmarkButton from './BookmarkButton';
+import ShareButton from './ShareButton';
 
 function InfoCard({ item }: any) {
-  const { isSignedIn, currentUser } = useContext(AuthContext);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [bookmark, setBookmark] = useState(false);
   const router = useRouter();
-
-  const setUsersBookmarks = useCallback(() => {
-    if (isSignedIn) {
-      setBookmark(
-        currentUser?.bookmarks?.some((b: any) => b?.eventId === item?.id)
-      );
-    }
-  }, [isSignedIn, currentUser, item]);
 
   useEffect(() => {
     const img = new Image();
@@ -28,30 +14,7 @@ function InfoCard({ item }: any) {
     img.onload = () => {
       setImageLoaded(true);
     };
-    setUsersBookmarks();
-  }, [item, setUsersBookmarks]);
-
-  const handleBookmarks = useCallback(
-    async (e: any) => {
-      e.stopPropagation();
-      if (bookmark) {
-        await deleteBookmark(
-          String(item?.id),
-          currentUser?.bookmarks.filter((b: any) => b?.eventId === item?.id)[0]
-            ?.id
-        );
-        setBookmark(false);
-      } else {
-        const data: any = {
-          eventId: String(item?.id),
-          userId: currentUser?.id,
-        };
-        await createBookmark(String(item?.id), data);
-        setBookmark(true);
-      }
-    },
-    [currentUser, item, bookmark]
-  );
+  }, [item]);
 
   return (
     <div
@@ -66,7 +29,8 @@ function InfoCard({ item }: any) {
           <img
             alt='Place Image'
             src={item?.place?.image?.url}
-            className='rounded-2xl w-full h-full object-cover image-loaded'
+            className='rounded-2xl w-full h-full object-cover'
+            style={{ opacity: 1 }}
           />
         )}
       </div>
@@ -75,7 +39,7 @@ function InfoCard({ item }: any) {
           <p className=''>
             {item?.meeting_datetime &&
               moment(new Date(item?.meeting_datetime)).format(
-                "dddd, MMMM DD, YYYY HH:mm"
+                'dddd, MMMM DD, YYYY HH:mm'
               )}
           </p>
         </div>
@@ -87,7 +51,7 @@ function InfoCard({ item }: any) {
         <div className='flex justify-between items-end pt-5'>
           <div>
             <p className='text-right font-extralight'>
-              {item?.price && item?.price > 0 ? item.price : "FREE"}
+              {item?.price && item?.price > 0 ? item.price : 'FREE'}
             </p>
           </div>
           <div className='flex items-center space-x-5 ml-5'>
@@ -98,12 +62,6 @@ function InfoCard({ item }: any) {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .image-loaded {
-          opacity: 1;
-        }
-      `}</style>
     </div>
   );
 }

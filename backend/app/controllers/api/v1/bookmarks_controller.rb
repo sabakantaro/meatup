@@ -1,16 +1,22 @@
 class Api::V1::BookmarksController < ApplicationController
   def create
-    Bookmark.create(bookmarks_params)
-    head 200
+    boookmark = Bookmark.new(bookmarks_params)
+    if boookmark.save
+      head 200
+    else
+      head 500
+    end
   end
 
   def destroy
-    bookmarks = Bookmark.find_by(id: params[:id])
-    return head 404 unless bookmarks.present?
+    bookmarks = Bookmark.find(params[:id])
+    return head 404 if bookmarks.blank?
 
-    bookmarks.destroy
-
-    head 200
+    if bookmarks.destroy
+      head 200
+    else
+      head 500
+    end
   end
 
   def bookmarks_params

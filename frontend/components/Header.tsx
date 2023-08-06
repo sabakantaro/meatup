@@ -81,7 +81,7 @@ function Header({ placeholder }: any) {
           href: `/users/${currentUser && currentUser.id}/show`,
         },
         {
-          name: "Create Event",
+          name: "Become a Host",
           href: "/events/create",
         },
         {

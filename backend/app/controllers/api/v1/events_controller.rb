@@ -1,23 +1,33 @@
 class Api::V1::EventsController < ApplicationController
   def index
-    render json: { events: Event.includes(:user, :place).as_json }, status: 200
+    events = Event.includes(:user, :place).as_json
+    render json: { events: events }, status: 200
   end
 
   def show
     event = Event.includes(:user, :place).find_by(id: params[:id])
-    return head :not_found unless event.present?
+    return head 404 if event.blank?
 
-    render json: { event: event.as_json, comments: event.comments.includes(:user).as_json }, status: 200
+    comments = event.comments.includes(:user).as_json
+    render json: { event: event.as_json, comments: comments }, status: 200
   end
 
   def create
     event = Event.new(event_params)
-    event.save
+    if event.save
+      head 200
+    else
+      head 500
+    end
   end
 
   def destroy
     event = Event.find(params[:id])
-    event.destroy
+    if event.destroy
+      head 200
+    else
+      head 500
+    end
   end
 
   private

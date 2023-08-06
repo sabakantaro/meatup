@@ -1,6 +1,6 @@
-import React from "react";
-import Avatar from "../users/Avatar";
-import Modal from "../Modal";
+import React from 'react';
+import Avatar from '../users/Avatar';
+import Modal from '../Modal';
 
 type Props = {
   comment: any;
@@ -14,8 +14,8 @@ const Comments = ({ comment, handleDeleteComment }: Props) => {
   const timeDifference = Math.floor(
     (currentDate - createdDate) / (1000 * 60 * 60 * 24)
   );
-  const formatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
-  const formattedTimeDifference = formatter.format(-timeDifference, "day");
+  const formatter = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  const formattedTimeDifference = formatter.format(-timeDifference, 'day');
 
   return (
     <>
@@ -75,7 +75,7 @@ const Comments = ({ comment, handleDeleteComment }: Props) => {
               <div
                 className='hover:text-gray-500 cursor-pointer p-1'
                 onClick={() => {
-                  console.log("Reported");
+                  console.log('Reported');
                   setIsVisivle(false);
                 }}
               >
@@ -84,7 +84,7 @@ const Comments = ({ comment, handleDeleteComment }: Props) => {
               <div
                 className='hover:text-gray-500 cursor-pointer p-1'
                 onClick={() => {
-                  handleDeleteComment;
+                  handleDeleteComment();
                   setIsVisivle(false);
                 }}
               >

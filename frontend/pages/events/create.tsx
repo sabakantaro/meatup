@@ -1,29 +1,32 @@
-import React, { useContext, useEffect, useState } from "react";
-import { createEvent } from "@/pages/api/event";
-import { getPlaces } from "@/pages/api/place";
-import { AuthContext } from "../_app";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import Head from "next/head";
+import React, { useContext, useEffect, useState } from 'react';
+import { createEvent } from '@/pages/api/event';
+import { getPlaces } from '@/pages/api/place';
+import { AuthContext } from '../_app';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Head from 'next/head';
 
 const PostForm = () => {
   const { currentUser } = useContext(AuthContext);
-  const [description, setDescription] = useState("");
-  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState('');
   const [placeId, setPlaceId] = useState(0);
   const [places, setPlaces] = useState([]);
   const [meetingDatetime, setMeetingDatetime] = useState(new Date());
+  const postDisabled =
+    title === '' ||
+    description == '' ||
+    description.length > 500 ||
+    places.length === 0;
+  const descriptionInvalid = description && 500 < description.length;
+  const titleInvalid = title && 50 < title.length;
 
   useEffect(() => {
     const handleGetPlaces = async () => {
       try {
         const res = await getPlaces();
-        console.log(res);
-
         if (res?.status === 200) {
           setPlaces(res?.data.places as any);
-        } else {
-          console.log("No places");
         }
       } catch (err) {
         console.log(err);
@@ -35,11 +38,11 @@ const PostForm = () => {
 
   const createFormData = () => {
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("meeting_datetime", meetingDatetime as any);
-    formData.append("description", description);
-    formData.append("userId", currentUser?.id as any);
-    formData.append("placeId", placeId as any);
+    formData.append('title', title);
+    formData.append('meeting_datetime', meetingDatetime as any);
+    formData.append('description', description);
+    formData.append('userId', currentUser?.id as any);
+    formData.append('placeId', placeId as any);
 
     return formData;
   };
@@ -50,18 +53,18 @@ const PostForm = () => {
     const data = createFormData();
 
     await createEvent(data).then(() => {
-      setDescription("");
-      setTitle("");
+      setDescription('');
+      setTitle('');
       setMeetingDatetime(new Date());
     });
   };
 
   return (
     <>
-    <Head>
-        <title>Meatup | Create Event Page</title>
+      <Head>
+        <title>Meatup | Become a Host Page</title>
         <link rel='icon' href='/meatup_logo.png' />
-    </Head>
+      </Head>
       <Header />
       <div className='container mx-auto px-4 py-8 max-w-screen-sm'>
         <form onSubmit={handleCreatePost}>
@@ -70,36 +73,50 @@ const PostForm = () => {
               htmlFor='title'
               className='block text-lg font-medium text-gray-700'
             >
-              Title
+              Title*
             </label>
             <input
               type='text'
               id='title'
-              className='border border-gray-300 rounded-md p-2 w-full'
+              className={`border ${
+                titleInvalid ? 'border-red-500' : 'border-gray-300'
+              } rounded-md p-2 w-full`}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
+            {titleInvalid && (
+              <p className='text-red-500 text-xs italic'>
+                Please write text within 20 letters
+              </p>
+            )}
           </div>
           <div className='mb-4'>
             <label
               htmlFor='description'
               className='block text-lg font-medium text-gray-700'
             >
-              Description
+              Description*
             </label>
             <textarea
               id='description'
-              className='border border-gray-300 rounded-md p-2 w-full h-32 resize-none'
+              className={`border ${
+                descriptionInvalid ? 'border-red-500' : 'border-gray-300'
+              } rounded-md p-2 w-full h-32 resize-none `}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
+            {descriptionInvalid && (
+              <p className='text-red-500 text-xs italic'>
+                Please write text within 200 letters
+              </p>
+            )}
           </div>
           <div className='mb-4'>
             <label
               htmlFor='meetingDatetime'
               className='block text-lg font-medium text-gray-700'
             >
-              Meeting Datetime
+              Meeting Datetime*
             </label>
             <input
               type='datetime-local'
@@ -114,7 +131,7 @@ const PostForm = () => {
               htmlFor='placeId'
               className='block text-lg font-medium text-gray-700'
             >
-              Select a Place
+              Select a Place*
             </label>
             <select
               id='placeId'
@@ -123,18 +140,21 @@ const PostForm = () => {
               onChange={(e) => setPlaceId(e.target.value as any)}
             >
               <option value=''>Select a place</option>
-              {places?.map((place: any) => (
-                <option key={place.id} value={place.id}>
-                  {place.location}
-                </option>
-              ))}
+              {places
+                ?.filter(({ location }) => location)
+                .map(({ id, location }) => (
+                  <option key={id} value={id}>
+                    {location}
+                  </option>
+                ))}
             </select>
           </div>
           <div className='mb-4'>
             <button
               type='submit'
               className='bg-red-500 text-white py-2 px-4 rounded-md self-start'
-              disabled={!description || description.length > 140}
+              disabled={postDisabled}
+              style={postDisabled ? { cursor: 'not-allowed' } : {}}
             >
               Post
             </button>

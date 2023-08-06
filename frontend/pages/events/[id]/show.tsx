@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
-import { useRouter } from "next/router";
-import { AuthContext } from "../../_app";
-import { getEvent } from "@/pages/api/event";
-import Header from "@/components/Header";
-import Summary from "@/components/events/Summary";
-import TitleHeader from "@/components/events/TitleHeader";
-import AttendanceFooter from "@/components/events/AttendanceFooter";
-import Footer from "@/components/Footer";
-import Avatar from "@/components/users/Avatar";
-import { createComment, deleteComment } from "@/pages/api/comment";
-import { Comment } from "@/typings";
-import Comments from "@/components/events/Comments";
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { useRouter } from 'next/router';
+import { AuthContext } from '../../_app';
+import { getEvent } from '@/pages/api/event';
+import Header from '@/components/Header';
+import Summary from '@/components/events/Summary';
+import TitleHeader from '@/components/events/TitleHeader';
+import AttendanceFooter from '@/components/events/AttendanceFooter';
+import Footer from '@/components/Footer';
+import Avatar from '@/components/users/Avatar';
+import { createComment, deleteComment } from '@/pages/api/comment';
+import { Comment } from '@/typings';
+import Comments from '@/components/events/Comments';
 
 const Show = () => {
   const { currentUser } = useContext(AuthContext);
   const [event, setEvent] = useState<any>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [comments, setComments] = useState([]);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState('');
   const router = useRouter();
   const { id } = router.query;
 
@@ -35,9 +35,8 @@ const Show = () => {
       if (res?.status === 200) {
         setEvent(res?.data.event as any);
         setComments(res?.data.comments as any);
-        console.log(res?.data.comments);
       } else {
-        console.log("No event");
+        console.log('No event');
       }
     } catch (err) {
       console.log(err);
@@ -56,7 +55,7 @@ const Show = () => {
         content: content,
       };
       await createComment(id as string, data);
-      setContent("");
+      setContent('');
       handleGetEvent();
     } catch (err) {
       console.log(err);
@@ -67,7 +66,8 @@ const Show = () => {
     async (commentId: string) => {
       try {
         await deleteComment(id as string, commentId);
-        setContent("");
+        setContent('');
+        handleGetEvent();
       } catch (err) {
         console.log(err);
       }
@@ -141,15 +141,15 @@ const Show = () => {
                       <div className='pt-4'>
                         <button
                           className='ml-4 sm:ml-5 mr-2.5'
-                          disabled={content === ""}
+                          disabled={content === ''}
                           onClick={handleCreateComment}
                         >
                           <svg
-                            fill={content !== "" ? "outlined" : "none"}
+                            fill={content !== '' ? 'outlined' : 'none'}
                             strokeWidth={1.8}
-                            stroke={content !== "" ? "" : "currentColor"}
+                            stroke={content !== '' ? '' : 'currentColor'}
                             className={`w-6 h-6 ${
-                              content !== "" ? " fill-teal-600" : ""
+                              content !== '' ? ' fill-teal-600' : ''
                             }`}
                           >
                             <path d='M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5' />
@@ -162,7 +162,7 @@ const Show = () => {
               </div>
               <div
                 className='flex flex-row p-6 bg-white lg:rounded-2xl cursor-pointer w-100 items-center my-20'
-                onClick={() => router.push("/search")}
+                onClick={() => router.push('/search')}
               >
                 <img
                   alt='Photo of the event place'
