@@ -26,7 +26,7 @@ function Map({ events }: any) {
       onMove={(e: any) => setViewState(e.viewState)}
     >
       {events.map((result: any) => (
-        <div key={result.place.longitude}>
+        <div key={result.place.id}>
           <Marker
             longitude={result.place.longitude}
             latitude={result.place.latitude}
