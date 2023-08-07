@@ -1,53 +1,57 @@
-import React, { useState, useCallback, useEffect, useContext } from "react";
-import { BookmarkIcon } from "@heroicons/react/24/solid";
-import { BookmarkIcon as BookmarkOutlineIcon } from "@heroicons/react/24/outline";
-import { AuthContext } from "@/pages/_app";
-import { createBookmark, deleteBookmark } from "@/pages/api/bookmark";
+import React, { useState, useEffect, useContext } from 'react';
+import { BookmarkIcon } from '@heroicons/react/24/solid';
+import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline';
+import { AuthContext } from '@/pages/_app';
+import { createBookmark, deleteBookmark } from '@/pages/api/bookmark';
+import { getCurrentUser } from '@/pages/api/auth';
 
 type Props = {
   item: any;
 };
 
 const BookmarkButton = ({ item }: Props) => {
-  const { isSignedIn, currentUser } = useContext(AuthContext);
+  const { isSignedIn, currentUser, setCurrentUser } = useContext(AuthContext);
   const [bookmark, setBookmark] = useState(false);
 
-  const setUsersBookmarks = useCallback(() => {
+  const handleBookmarks = async (e: any) => {
+    e.stopPropagation();
+    if (!isSignedIn) {
+      return;
+    }
+
+    if (bookmark) {
+      await deleteBookmark(
+        String(item?.id),
+        currentUser?.bookmarks.filter((b: any) => b?.eventId === item?.id)[0]
+          ?.id
+      );
+      setBookmark(false);
+    } else {
+      const data: any = {
+        eventId: String(item?.id),
+        userId: currentUser?.id,
+      };
+      await createBookmark(String(item?.id), data);
+      setBookmark(true);
+
+      try {
+        const res = await getCurrentUser();
+        if (res?.status === 200) {
+          setCurrentUser(res?.data.currentUser);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  useEffect(() => {
     if (isSignedIn) {
       setBookmark(
         currentUser?.bookmarks?.some((b: any) => b?.eventId === item?.id)
       );
     }
-  }, [isSignedIn, currentUser, item]);
-
-  const handleBookmarks = useCallback(
-    async (e: any) => {
-      e.stopPropagation();
-      if (!isSignedIn) {
-        return;
-      }
-      if (bookmark) {
-        await deleteBookmark(
-          String(item?.id),
-          currentUser?.bookmarks.filter((b: any) => b?.eventId === item?.id)[0]
-            ?.id
-        );
-        setBookmark(false);
-      } else {
-        const data: any = {
-          eventId: String(item?.id),
-          userId: currentUser?.id,
-        };
-        await createBookmark(String(item?.id), data);
-        setBookmark(true);
-      }
-    },
-    [currentUser, item, bookmark]
-  );
-
-  useEffect(() => {
-    setUsersBookmarks();
-  }, [setUsersBookmarks]);
+  }, [isSignedIn, currentUser]);
 
   return (
     <div>
