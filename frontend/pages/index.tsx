@@ -56,7 +56,7 @@ export default function Home() {
           <h2 className='text-4xl font-semibold pb-5'>Upcoming Event</h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
             {events.map((item: any) => (
-              <Smallcard key={item.image} item={item} />
+              <Smallcard key={item.id} item={item} />
             ))}
           </div>
         </section>
@@ -65,7 +65,7 @@ export default function Home() {
             <h2 className='text-4xl font-semibold py-8'>Workout Places</h2>
             <div className='flex space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3'>
               {places.map((item: any) => (
-                <MediumCard key={item.image} item={item} />
+                <MediumCard key={item.id} item={item} />
               ))}
             </div>
           </section>
