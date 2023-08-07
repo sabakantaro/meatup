@@ -12,11 +12,11 @@ import { createComment, deleteComment } from '@/pages/api/comment';
 import { Comment } from '@/typings';
 import Comments from '@/components/events/Comments';
 
-const Show = () => {
+const Show: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
   const [event, setEvent] = useState<any>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState('');
   const router = useRouter();
   const { id } = router.query;
@@ -31,12 +31,13 @@ const Show = () => {
 
   const handleGetEvent = useCallback(async () => {
     try {
+      if (!id) {
+        return;
+      }
       const res = await getEvent(id as string);
       if (res?.status === 200) {
         setEvent(res?.data.event as any);
         setComments(res?.data.comments as any);
-      } else {
-        console.log('No event');
       }
     } catch (err) {
       console.log(err);
@@ -112,8 +113,8 @@ const Show = () => {
                   return (
                     <>
                       <Comments
-                        comment={comment}
                         key={comment.id}
+                        comment={comment}
                         handleDeleteComment={() =>
                           handleDeleteComment(comment.id)
                         }
