@@ -1,8 +1,8 @@
-import { Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
+import { Fragment } from 'react';
+import { Menu, Transition } from '@headlessui/react';
 
 function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 }
 
 const UtilityMenu = ({ items, button }: any) => {
@@ -22,13 +22,13 @@ const UtilityMenu = ({ items, button }: any) => {
           <Menu.Items className='absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
             <div className='py-1'>
               {items.map((item: any) => (
-                <Menu.Item>
+                <Menu.Item key={item.key}>
                   {({ active }: any) => (
                     <a
                       href={item.href}
                       className={classNames(
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                        "block px-4 py-2 text-sm"
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block px-4 py-2 text-sm'
                       )}
                     >
                       {item.name}

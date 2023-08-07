@@ -1,19 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import InfoCard from '@/components/events/InfoCard';
 import Map from '@/components/Map';
 import { useRouter } from 'next/router';
-import { format } from 'date-fns';
 import Head from 'next/head';
 import { getEvents } from './api/event';
+import moment from 'moment';
 
-function Search() {
+function Search(): React.ReactElement {
   const router = useRouter();
   const { location, date }: any = router.query;
-  const formattedDate = date && format(new Date(date), 'dd MMMM');
-  const [events, setEvents] = useState<any[]>([]);
+  const formattedDate = date && moment(new Date(date)).format('DD MMMM');
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const formattedPlaceholders = useMemo(() => {
+    return location
+      ? formattedDate
+        ? `${location} | ${formattedDate}`
+        : location
+      : formattedDate;
+  }, [location, formattedDate]);
 
   useEffect(() => {
     const handleGetEvents = async () => {
@@ -53,7 +61,7 @@ function Search() {
         <title>Meatup | Search Events Page</title>
         <link rel='icon' href='/meatup_logo.png' />
       </Head>
-      <Header placeholder={`${location} | ${formattedDate}`} />
+      <Header placeholder={formattedPlaceholders} />
       <main className='flex min-h-[400px]'>
         <section className='flex-grow pt-14'>
           {loading ? (
