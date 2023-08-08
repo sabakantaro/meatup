@@ -1,7 +1,7 @@
-import { useContext } from "react";
-import { AuthContext } from "@/pages/_app";
+import { useContext } from 'react';
+import { AuthContext } from '@/pages/_app';
 
-function Footer() {
+const Footer = () => {
   const { currentUser } = useContext(AuthContext);
   return (
     <footer className='grid grid-cols-1 md:grid-cols-3 gap-y-4 px-8 md:px-32 py-14 bg-slate-800 text-white'>
@@ -61,6 +61,6 @@ function Footer() {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

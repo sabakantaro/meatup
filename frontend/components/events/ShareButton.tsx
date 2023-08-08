@@ -1,22 +1,20 @@
-import React from "react";
-import { ArrowUpOnSquareIcon } from "@heroicons/react/24/outline";
+import React from 'react';
+import { ArrowUpOnSquareIcon } from '@heroicons/react/24/outline';
 
-type Props = {};
-
-function ShareButton({}: Props) {
-  const copyUrlToClipboard = (e: any) => {
+const ShareButton = () => {
+  const copyUrlToClipboard = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigator.clipboard.writeText(window.location.href);
-    alert("Copied to clipboard");
+    alert('Copied to clipboard');
   };
 
   return (
     <div>
-      <div onClick={(e) => copyUrlToClipboard(e)}>
+      <span onClick={(e) => copyUrlToClipboard(e)}>
         <ArrowUpOnSquareIcon className='w-6 h-6' />
-      </div>
+      </span>
     </div>
   );
-}
+};
 
 export default ShareButton;

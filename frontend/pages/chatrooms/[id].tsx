@@ -12,10 +12,11 @@ import Footer from '@/components/Footer';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import Head from 'next/head';
 
-const Chatroom = () => {
+const Chatroom: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
   const router = useRouter();
   const { id } = router.query;
+  const numericId = Number(id);
   const [loading, setLoading] = useState<boolean>(true);
   const [otherUser, setOtherUser] = useState<User>();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -23,10 +24,10 @@ const Chatroom = () => {
 
   const handleGetChatroom = useCallback(async () => {
     try {
-      if (!id) {
+      if (!numericId) {
         return;
       }
-      const res = await getChatroom(id as string);
+      const res = await getChatroom(numericId);
       if (res?.status === 200) {
         setOtherUser(res?.data.otherUser);
         setMessages(res?.data.messages);
@@ -35,7 +36,7 @@ const Chatroom = () => {
       console.log(err);
     }
     setLoading(false);
-  }, [id]);
+  }, [numericId]);
 
   useEffect(() => {
     handleGetChatroom();
@@ -43,8 +44,8 @@ const Chatroom = () => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const data: any = {
-      chatRoomId: Number(id),
+    const data: Message = {
+      chatroomId: numericId,
       userId: currentUser?.id,
       content: content,
     };
@@ -62,7 +63,7 @@ const Chatroom = () => {
   return (
     <>
       <Head>
-        <title>Meatup | Chatroom - {id}</title>
+        <title>Meatup | Chatroom - {otherUser?.name}</title>
         <link rel='icon' href='/meatup_logo.png' />
       </Head>
       <Header />

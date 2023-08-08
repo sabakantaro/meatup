@@ -1,49 +1,55 @@
-import React, { useCallback, useState } from "react";
-import { createPlace } from "@/pages/api/place";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import Head from "next/head";
+import React, { useState } from 'react';
+import { createPlace } from '@/pages/api/place';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { TrashIcon } from '@heroicons/react/24/outline';
+import Head from 'next/head';
 
 const PostForm = () => {
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState('');
   const [longitude, setLongitude] = useState(0);
   const [latitude, setLatitude] = useState(0);
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState("");
+  const [image, setImage] = useState('');
+  const [preview, setPreview] = useState('');
 
-  const uploadImage = useCallback((e: any) => {
+  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) {
+      return;
+    }
     const file = e.target.files[0];
-    setImage(file);
-  }, []);
+    setImage(String(file));
+  };
 
-  const previewImage = useCallback((e: any) => {
+  const previewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) {
+      return;
+    }
     const file = e.target.files[0];
     setPreview(URL.createObjectURL(file));
-  }, []);
+  };
 
   const createFormData = () => {
     const formData = new FormData();
 
-    formData.append("location", location);
-    formData.append("longitude", longitude as any);
-    formData.append("latitude", latitude as any);
-    if (image) formData.append("image", image);
+    formData.append('location', location);
+    formData.append('longitude', longitude as any);
+    formData.append('latitude', latitude as any);
+    if (image) formData.append('image', image);
 
     return formData;
   };
 
-  const handleCreatePost = async (e: any) => {
+  const handleCreatePost = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     const data = createFormData();
 
     await createPlace(data).then(() => {
-      setLocation("");
+      setLocation('');
       setLongitude(0);
       setLatitude(0);
-      setPreview("");
-      setImage(null);
+      setPreview('');
+      setImage('');
     });
   };
 
@@ -73,7 +79,7 @@ const PostForm = () => {
           placeholder='latitude'
           className='border border-gray-300 rounded-md p-2 mb-4'
           value={latitude}
-          onChange={(e: any) => setLatitude(e.target.value)}
+          onChange={(e) => setLatitude(Number(e.target.value))}
         />
         <h4 className='text-lg font-semibold mb-4'>Longitude</h4>
         <input
@@ -81,7 +87,7 @@ const PostForm = () => {
           placeholder='longitude'
           className='border border-gray-300 rounded-md p-2 mb-4'
           value={longitude}
-          onChange={(e: any) => setLongitude(e.target.value)}
+          onChange={(e) => setLongitude(Number(e.target.value))}
         />
         <h4 className='text-lg font-semibold mb-4'>Image</h4>
         <div className='mb-4'>
@@ -97,7 +103,7 @@ const PostForm = () => {
                 id='icon-button-file'
                 type='file'
                 className='hidden'
-                onChange={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   uploadImage(e);
                   previewImage(e);
                 }}
@@ -113,8 +119,8 @@ const PostForm = () => {
                   id='removeImage'
                   className='bg-gray-200 text-gray-500 p-2.5 rounded-md ml-4'
                   onClick={() => {
-                    setImage(null);
-                    setPreview("");
+                    setImage('');
+                    setPreview('');
                   }}
                 >
                   <TrashIcon className='h-6 w-6' />

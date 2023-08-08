@@ -5,12 +5,13 @@ import { AuthContext } from "@/pages/_app";
 import { useRouter } from "next/router";
 import BookmarkButton from "./BookmarkButton";
 import ShareButton from "./ShareButton";
+import { Event } from "@/typings";
 
-type Props = {
-  event: any;
+type AttendanceFooterProps = {
+  event: Event;
 };
 
-function AttendanceFooter({ event }: Props) {
+const AttendanceFooter: React.FC<AttendanceFooterProps> = ({ event }) => {
   const { currentUser } = useContext(AuthContext);
   const router = useRouter();
 

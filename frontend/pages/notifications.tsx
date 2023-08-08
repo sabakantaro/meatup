@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Head from "next/head";
 
-const NotificationsList = () => {
+const NotificationsList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const history = useRouter();
@@ -29,8 +29,11 @@ const NotificationsList = () => {
   }, []);
 
   const handleIsChecked = async (notification: Notification) => {
+    if (!notification.id) {
+      return;
+    }
     try {
-      const res = await updateNotification(String(notification.id));
+      const res = await updateNotification(notification.id);
       if (res?.status === 200) {
         history.push(notification.linkUrl);
       }
@@ -67,7 +70,7 @@ const NotificationsList = () => {
                     )}
                     <div className='flex items-center p-0'>
                       <div className='mr-3'>
-                        <Avatar alt='avatar' src={notification.imageUrl} />
+                        <Avatar src={notification.imageUrl} />
                       </div>
                       <div className='flex flex-col flex-grow'>
                         <h4 className='text-xl pb-2 overflow-ellipsis line-clamp-2'>

@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import React, { useCallback, useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import AvatarLarge from '@/components/users/AvatarLarge';
 import { AuthContext } from '@/pages/_app';
 import { useRouter } from 'next/router';
@@ -8,12 +8,14 @@ import { updateUser } from '@/pages/api/user';
 import moment from 'moment';
 import Head from 'next/head';
 import { getUser } from '@/pages/api/user';
+import { User } from '@/typings';
 
 const Edit = () => {
   const { currentUser } = useContext(AuthContext);
-  const [user, setUser] = React.useState<any>(null);
+  const [user, setUser] = React.useState<User>();
   const router = useRouter();
   const { id } = router.query;
+  const numericId = Number(id);
   const [name, setName] = useState('');
   const [profile, setProfile] = useState('');
   const [image, setImage] = useState('');
@@ -25,12 +27,12 @@ const Edit = () => {
 
   useEffect(() => {
     const handleGetUser = async () => {
-      if (!id) {
+      if (!numericId) {
         return;
       }
 
       try {
-        const res = await getUser(id as string);
+        const res = await getUser(numericId);
         if (res?.status === 200) {
           const { user } = res.data;
           setUser(user);
@@ -47,17 +49,23 @@ const Edit = () => {
     };
 
     handleGetUser();
-  }, [id, router]);
+  }, [numericId, router]);
 
-  const uploadImage = useCallback((e: any) => {
-    const file = e.target.files[0];
-    setImage(file);
-  }, []);
+  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) {
+      return;
+    }
+    const file = e.target.files[0]
+    setImage(file as unknown as string);
+  };
 
-  const previewImage = useCallback((e: any) => {
+  const previewImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) {
+      return;
+    }
     const file = e.target.files[0];
     setPreview(URL.createObjectURL(file));
-  }, []);
+  };
 
   const createFormData = () => {
     const formData = new FormData();
@@ -73,14 +81,17 @@ const Edit = () => {
     return formData;
   };
 
-  const handleEditProfile = async (e: any) => {
+  const handleEditProfile = async (e: React.MouseEvent) => {
     e.preventDefault();
+    if (!numericId) {
+      return;
+    }
 
     const data = createFormData();
 
     try {
-      const res = await updateUser(id as string, data);
-      if (currentUser?.id === id && res?.status === 200) {
+      const res = await updateUser(numericId, data);
+      if (currentUser?.id === numericId && res?.status === 200) {
         setTimeout(() => {
           router.push(`/users/${id}/show`);
         }, 500);
@@ -105,7 +116,6 @@ const Edit = () => {
               <AvatarLarge
                 userName={user?.name}
                 src={preview || ''}
-                size={32}
               />
             </div>
             <div className='mb-4'>
@@ -115,7 +125,7 @@ const Edit = () => {
                   id='icon-button-file'
                   type='file'
                   className='hidden'
-                  onChange={(e) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     uploadImage(e);
                     previewImage(e);
                   }}
