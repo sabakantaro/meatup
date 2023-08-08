@@ -1,16 +1,20 @@
 import React from 'react';
 import Avatar from '../users/Avatar';
 import Modal from '../Modal';
+import { Comment } from '@/typings';
 
-type Props = {
-  comment: any;
+type CommentsProps = {
+  comment: Comment;
   handleDeleteComment: () => void;
 };
 
-const Comments = ({ comment, handleDeleteComment }: Props) => {
+const Comments: React.FC<CommentsProps> = ({
+  comment,
+  handleDeleteComment,
+}) => {
   const [isVisible, setIsVisivle] = React.useState(false);
-  const currentDate: any = new Date();
-  const createdDate: any = new Date(comment?.createdAt);
+  const currentDate = new Date() as unknown as number;
+  const createdDate = new Date(comment?.createdAt) as unknown as number;
   const timeDifference = Math.floor(
     (currentDate - createdDate) / (1000 * 60 * 60 * 24)
   );

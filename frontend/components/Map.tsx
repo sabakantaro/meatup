@@ -1,15 +1,20 @@
 import * as geolib from "geolib";
 import { useState } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import { Event } from "@/typings";
 
-function Map({ events }: any) {
+type MapProps = {
+  events: Event[];
+};
+
+const Map: React.FC<MapProps> = ({ events }) => {
   const [selectedLocation, setSelectedLocation] = useState({});
-  const coordinates = events.map((result: any) => ({
-    longitude: result.place.longitude,
-    latitude: result.place.latitude,
+  const coordinates = events.map((event) => ({
+    longitude: event.place.longitude,
+    latitude: event.place.latitude,
   }));
   const center = geolib.getCenter(coordinates);
-  const [viewState, setViewState] = useState<any>({
+  const [viewState, setViewState] = useState<Object>({
     // @ts-ignore
     longitude: center.longitude,
     // @ts-ignore
@@ -23,18 +28,18 @@ function Map({ events }: any) {
       {...viewState}
       mapStyle='mapbox://styles/ryosuke8291/clg8pdois001i01pgqj6xnd0z'
       mapboxAccessToken={process.env.mapbox_key}
-      onMove={(e: any) => setViewState(e.viewState)}
+      onMove={(e) => setViewState(e.viewState)}
     >
-      {events.map((result: any) => (
-        <div key={result.place.id}>
+      {events.map((event) => (
+        <div key={event.place.id}>
           <Marker
-            longitude={result.place.longitude}
-            latitude={result.place.latitude}
+            longitude={Number(event.place.longitude)}
+            latitude={Number(event.place.latitude)}
             offset={[-20, -10]}
           >
             <p
               role='img'
-              onClick={() => setSelectedLocation(result.place)}
+              onClick={() => setSelectedLocation(event.place)}
               className='cursor-pointer text-2xl animate-bounce'
               aria-label='push-pin'
             >
@@ -43,15 +48,15 @@ function Map({ events }: any) {
           </Marker>
           {
             // @ts-ignore
-            selectedLocation.longitude === result.place.longitude ? (
+            selectedLocation.longitude === event.place.longitude ? (
               <Popup
                 onClose={() => setSelectedLocation(false)}
                 closeButton={true}
                 closeOnClick={false}
-                latitude={result.place.latitude}
-                longitude={result.place.longitude}
+                latitude={Number(event.place.latitude)}
+                longitude={Number(event.place.longitude)}
               >
-                {result.place.location}
+                {event.place.location}
               </Popup>
             ) : (
               false

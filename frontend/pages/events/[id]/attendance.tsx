@@ -1,28 +1,28 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
-import { useRouter } from "next/router";
-import { getEvent } from "@/pages/api/event";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import AttendanceFooter from "@/components/events/AttendanceFooter";
-import moment from "moment";
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { useRouter } from 'next/router';
+import { getEvent } from '@/pages/api/event';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import AttendanceFooter from '@/components/events/AttendanceFooter';
+import moment from 'moment';
+import { Event } from '@/typings';
 
-const Attendance = () => {
-  const [event, setEvent] = useState<any>(null);
+const Attendance: React.FC = () => {
+  const [event, setEvent] = useState<Event>();
   const router = useRouter();
   const { id } = router.query;
+  const numericId = Number(id);
 
   const handleGetEvent = useCallback(async () => {
     try {
-      const res = await getEvent(id as string);
+      const res = await getEvent(numericId);
       if (res?.status === 200) {
-        setEvent(res?.data.event as any);
-      } else {
-        console.log("No event");
+        setEvent(res?.data.event);
       }
     } catch (err) {
       console.log(err);
     }
-  }, [id, router]);
+  }, [numericId, router]);
 
   useEffect(() => {
     handleGetEvent();
@@ -63,7 +63,7 @@ const Attendance = () => {
                   <div className='relative overflow-hidden block rounded-lg mt-3'>
                     <img
                       className='h-64 md:h-80 w-full md:w-[500px] object-cover rounded-t-lg rounded-lg'
-                      src={event?.place?.image.url}
+                      src={event?.place?.image?.url}
                       alt='event image'
                     />
                   </div>
@@ -89,13 +89,13 @@ const Attendance = () => {
                           dateTime={
                             event?.meetingDatetime &&
                             moment(new Date(event?.meetingDatetime)).format(
-                              "dddd, MMMM DD, YYYY HH:mm"
+                              'dddd, MMMM DD, YYYY HH:mm'
                             )
                           }
                         >
                           {event?.meetingDatetime &&
                             moment(new Date(event?.meetingDatetime)).format(
-                              "dddd, MMMM DD, YYYY HH:mm"
+                              'dddd, MMMM DD, YYYY HH:mm'
                             )}
                         </time>
                       </div>
@@ -134,11 +134,11 @@ const Attendance = () => {
               </div>
               <div
                 className='flex flex-row p-6 bg-white lg:rounded-2xl cursor-pointer w-full items-center my-20'
-                onClick={() => router.push("/search")}
+                onClick={() => router.push('/search')}
               >
                 <img
                   alt='Photo of the event place'
-                  src={event?.place?.image.url}
+                  src={event?.place?.image?.url}
                   className='bg-transparent rounded-md object-cover h-16 w-16'
                 />
                 <div className='ml-5'>
@@ -158,7 +158,7 @@ const Attendance = () => {
           </div>
         </div>
       </div>
-      <AttendanceFooter event={event} />
+      {event && <AttendanceFooter event={event} />}
       <Footer />
     </>
   );

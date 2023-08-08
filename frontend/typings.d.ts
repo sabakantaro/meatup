@@ -12,26 +12,33 @@ export interface SignInData {
 
 export interface User {
   id: number
-  uid: string
+  uid: number
   provider: string
   email: string
   name: string
   profile?: string
   birthDate?: string
+  gender?: string
   image?: {
     url: string
   }
   allowPasswordChange: boolean
   created_at: string
   updated_at: string
-  bookmarks: any
+  bookmarks: Bookmark[]
+  events: Event[]
 }
 
 export interface Event {
-  id: string
+  map(arg0: (item: Event) => JSX.Element): import("react").ReactNode
+  id: number
   title: string
   description?: string
   meetingDatetime?: string
+  price?: number
+  place: Place
+  user: User
+  participants?: participants[]
 }
 
 export interface EventApiJson {
@@ -41,13 +48,16 @@ export interface EventApiJson {
 }
 
 export interface Place {
-  id: string
+  id: number
   latitude: string
   longitude: string
   location: string
   image?: {
     url: string
   }
+  length: number
+  filter(arg0: (place: Place) => JSX.Element | string): import("react").ReactNode
+  map(arg0: (place: Place) => JSX.Element): import("react").ReactNode
 }
 
 export interface PlaceApiJson {
@@ -55,24 +65,30 @@ export interface PlaceApiJson {
 }
 
 export interface Comment {
-  id: string
+  id: number
   content: string
-  userId: string
-  eventId: string
+  userId: number
+  eventId: number
+  createdAt: string
+  updatedAt: string
+  user: User
 }
 
 export interface CommentApiJson {
   content: string
-  userId: string
-  eventId: string
+  userId: number
+  eventId: number
 }
 
 export interface Chatroom {
+  id: Key | null | undefined
+  length: number
   chatroom: {
     id: number
   }
   otherUser: User,
   lastMessage: Message
+  map(arg0: (chatroom: Chatroom) => JSX.Element): import("react").ReactNode
 }
 
 export interface Message {
@@ -90,4 +106,20 @@ export interface Notification {
   imageUrl?: string
   content: string
   length: number
+}
+
+export interface Bookmark {
+  id: number
+  userId: number
+  eventId: number
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface participants {
+  id: number
+  userId: number
+  eventId: number
+  createdAt?: string
+  updatedAt?: string
 }

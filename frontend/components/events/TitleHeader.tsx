@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-const TitleHeader = ({ title, hostName }: any) => {
+type TitleHeaderProps = {
+  title?: string;
+  hostName?: string;
+};
+
+const TitleHeader: React.FC<TitleHeaderProps> = ({ title, hostName }) => {
   const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {

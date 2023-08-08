@@ -11,6 +11,6 @@ export const createPlace = (data: FormData): AxiosPromise => {
   return client.post("/places", data)
 }
 
-export const deletePlace = (id: string): AxiosPromise => {
+export const deletePlace = (id: number): AxiosPromise => {
   return client.delete(`/places/${id}`)
 }

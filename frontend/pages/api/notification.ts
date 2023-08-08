@@ -11,6 +11,6 @@ export const getNotifications = () => {
   });
 };
 
-export const updateNotification = (id: string) => {
+export const updateNotification = (id: number) => {
   return client.patch(`/notifications/${id}`);
 };

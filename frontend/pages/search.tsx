@@ -7,21 +7,25 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { getEvents } from './api/event';
 import moment from 'moment';
+import { Event } from '@/typings';
 
 function Search(): React.ReactElement {
   const router = useRouter();
-  const { location, date }: any = router.query;
-  const formattedDate = date && moment(new Date(date)).format('DD MMMM');
+  const { location, date } = router.query;
+  const locationString = Array.isArray(location) ? location.join(' ') : location;
+  const dateString = Array.isArray(date) ? date.join('') : date;
+  const formattedDate =
+    dateString && moment(new Date(dateString)).format('DD MMMM');
   const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const formattedPlaceholders = useMemo(() => {
-    return location
+    return locationString
       ? formattedDate
-        ? `${location} | ${formattedDate}`
-        : location
+        ? `${locationString} | ${formattedDate}`
+        : locationString
       : formattedDate;
-  }, [location, formattedDate]);
+  }, [locationString, formattedDate]);
 
   useEffect(() => {
     const handleGetEvents = async () => {
@@ -40,10 +44,10 @@ function Search(): React.ReactElement {
     handleGetEvents();
   }, []);
 
-  const filteredEvents = events?.filter((item: any) => {
-    const itemDate = new Date(item?.meeting_datetime);
-    const searchDate = date ? new Date(date) : null;
-    const lowercaseLocation = location?.toLowerCase();
+  const filteredEvents: Event[] = events?.filter((item) => {
+    const itemDate = new Date(item?.meetingDatetime as string);
+    const searchDate = dateString ? new Date(dateString) : null;
+    const lowercaseLocation = locationString?.toLowerCase();
 
     return (
       (!lowercaseLocation ||
@@ -90,7 +94,7 @@ function Search(): React.ReactElement {
                 <p className='button'>Type of Place</p>
               </div>
               <div className='flex flex-col'>
-                {filteredEvents.map((item: any) => (
+                {filteredEvents.map((item) => (
                   <InfoCard key={item.id} item={item} />
                 ))}
               </div>

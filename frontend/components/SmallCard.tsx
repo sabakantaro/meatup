@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Event } from '@/typings';
 
-function SmallCard({ item }: any) {
+type SmallCardProps = {
+  item: Event;
+};
+
+const SmallCard: React.FC<SmallCardProps> = ({ item }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    if (!item?.place?.image?.url) {
+      return;
+    }
     const img = new Image();
     img.src = item?.place?.image?.url;
     img.onload = () => {
@@ -37,6 +45,6 @@ function SmallCard({ item }: any) {
       </div>
     </div>
   );
-}
+};
 
 export default SmallCard;

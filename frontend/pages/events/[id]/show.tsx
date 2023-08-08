@@ -9,19 +9,23 @@ import AttendanceFooter from '@/components/events/AttendanceFooter';
 import Footer from '@/components/Footer';
 import Avatar from '@/components/users/Avatar';
 import { createComment, deleteComment } from '@/pages/api/comment';
-import { Comment } from '@/typings';
+import { Comment, Event } from '@/typings';
 import Comments from '@/components/events/Comments';
 
 const Show: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
-  const [event, setEvent] = useState<any>(null);
+  const [event, setEvent] = useState<Event>();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [content, setContent] = useState('');
   const router = useRouter();
   const { id } = router.query;
+  const numericId = Number(id);
 
   useEffect(() => {
+    if (!event?.place?.image?.url) {
+      return;
+    }
     const img = new Image();
     img.src = event?.place?.image?.url;
     img.onload = () => {
@@ -31,18 +35,18 @@ const Show: React.FC = () => {
 
   const handleGetEvent = useCallback(async () => {
     try {
-      if (!id) {
+      if (!numericId) {
         return;
       }
-      const res = await getEvent(id as string);
+      const res = await getEvent(numericId);
       if (res?.status === 200) {
-        setEvent(res?.data.event as any);
-        setComments(res?.data.comments as any);
+        setEvent(res?.data.event);
+        setComments(res?.data.comments);
       }
     } catch (err) {
       console.log(err);
     }
-  }, [id, router]);
+  }, [numericId, router]);
 
   useEffect(() => {
     handleGetEvent();
@@ -50,30 +54,30 @@ const Show: React.FC = () => {
 
   const handleCreateComment = useCallback(async () => {
     try {
-      const data: any = {
-        userId: currentUser?.id,
-        eventId: id,
-        content: content,
-      };
-      await createComment(id as string, data);
+      const formData = new FormData();
+      formData.append('userId', String(currentUser?.id));
+      formData.append('eventId', String(numericId));
+      formData.append('content', content);
+
+      await createComment(numericId, formData);
       setContent('');
       handleGetEvent();
     } catch (err) {
       console.log(err);
     }
-  }, [currentUser, id, content]);
+  }, [currentUser, numericId, content]);
 
   const handleDeleteComment = useCallback(
-    async (commentId: string) => {
+    async (commentId: number) => {
       try {
-        await deleteComment(id as string, commentId);
+        await deleteComment(numericId, commentId);
         setContent('');
         handleGetEvent();
       } catch (err) {
         console.log(err);
       }
     },
-    [id]
+    [numericId]
   );
 
   return (
@@ -92,7 +96,7 @@ const Show: React.FC = () => {
               ) : (
                 <img
                   className='h-64 md:h-96 w-full object-cover md:pt-4'
-                  src={event?.place?.image.url}
+                  src={event?.place?.image?.url}
                   alt='event image'
                 />
               )}
@@ -111,15 +115,13 @@ const Show: React.FC = () => {
                 </div>
                 {comments.map((comment: Comment) => {
                   return (
-                    <>
-                      <Comments
-                        key={comment.id}
-                        comment={comment}
-                        handleDeleteComment={() =>
-                          handleDeleteComment(comment.id)
-                        }
-                      />
-                    </>
+                    <Comments
+                      key={comment.id}
+                      comment={comment}
+                      handleDeleteComment={() =>
+                        handleDeleteComment(comment.id)
+                      }
+                    />
                   );
                 })}
                 <div className='pl-12 sm:pl-15'>
@@ -167,7 +169,7 @@ const Show: React.FC = () => {
               >
                 <img
                   alt='Photo of the event place'
-                  src={event?.place?.image.url}
+                  src={event?.place?.image?.url}
                   className='bg-transparent rounded-md object-cover h-16 w-16'
                 />
                 <div className='ml-5'>
@@ -189,7 +191,7 @@ const Show: React.FC = () => {
           </div>
         </div>
       </div>
-      <AttendanceFooter event={event} />
+      {event && <AttendanceFooter event={event} />}
       <Footer />
     </>
   );

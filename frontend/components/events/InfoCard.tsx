@@ -3,12 +3,20 @@ import { useRouter } from 'next/router';
 import moment from 'moment';
 import BookmarkButton from './BookmarkButton';
 import ShareButton from './ShareButton';
+import { Event } from '@/typings';
 
-function InfoCard({ item }: any) {
+type InfoCardProps = {
+  item: Event;
+};
+
+const InfoCard: React.FC<InfoCardProps> = ({ item }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    if (!item?.place?.image?.url) {
+      return;
+    }
     const img = new Image();
     img.src = item?.place?.image?.url;
     img.onload = () => {
@@ -37,8 +45,8 @@ function InfoCard({ item }: any) {
       <div className='flex flex-col flex-grow pl-5'>
         <div className='flex justify-between text-orange-700 pb-1'>
           <p className=''>
-            {item?.meeting_datetime &&
-              moment(new Date(item?.meeting_datetime)).format(
+            {item?.meetingDatetime &&
+              moment(new Date(item?.meetingDatetime)).format(
                 'dddd, MMMM DD, YYYY HH:mm'
               )}
           </p>
@@ -64,6 +72,6 @@ function InfoCard({ item }: any) {
       </div>
     </div>
   );
-}
+};
 
 export default InfoCard;

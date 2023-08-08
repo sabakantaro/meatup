@@ -11,7 +11,7 @@ export const getChatrooms = () => {
   })
 }
 
-export const getChatroom = (id: string) => {
+export const getChatroom = (id: number) => {
   return client.get(`chatrooms/${id}`, {
     headers: {
       "access-token": Cookies.get("_access_token"),
