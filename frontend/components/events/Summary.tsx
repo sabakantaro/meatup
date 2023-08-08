@@ -4,16 +4,15 @@ import moment from 'moment';
 import Map from '../Map';
 import HostInfoCard from './HostInfoCard';
 
-type Props = {
+type SummaryProps = {
   event: Event;
 };
 
-const Summary: React.FC<Props> = ({ event }: any) => {
+const Summary: React.FC<SummaryProps> = ({ event }) => {
   return (
     <>
       <div className='bg-white lg:rounded-2xl p-4 mb-4'>
         <HostInfoCard
-          // @ts-ignore
           user={event?.user}
         />
       </div>

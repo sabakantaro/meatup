@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
-function LargeCard() {
+const LargeCard = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const image = new Image();
-    image.src = "/largeCard.jpg";
+    image.src = '/largeCard.jpg';
     image.onload = () => {
       setImageLoaded(true);
     };
@@ -31,13 +31,13 @@ function LargeCard() {
         <p>Wishlist curated by Meatup</p>
         <button
           className='text-sm text-white bg-gray-900 px-4 py-2 rounded-lg mt-5'
-          onClick={() => router.push("/events/create" )}
+          onClick={() => router.push('/events/create')}
         >
           Get Inspired
         </button>
       </div>
     </section>
   );
-}
+};
 
 export default LargeCard;

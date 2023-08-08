@@ -5,17 +5,18 @@ import { useRouter } from "next/router";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Head from "next/head";
+import { Chatroom } from "@/typings";
 
-const Chatrooms = () => {
+const Chatrooms: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [chatrooms, setChatrooms] = useState([]);
+  const [chatrooms, setChatrooms] = useState<Chatroom>();
   const router = useRouter();
 
   const handleGetChatrooms = useCallback(async () => {
     try {
       const res = await getChatrooms();
-      if (res.status === 200) {
-        setChatrooms(res.data.chatrooms);
+      if (res?.status === 200) {
+        setChatrooms(res?.data.chatrooms);
       }
     } catch (err) {
       console.log(err);
@@ -37,9 +38,9 @@ const Chatrooms = () => {
       <div className='bg-gray-100'>
         <Header />
         {!loading && (
-          chatrooms.length > 0 ? (
+          chatrooms && chatrooms.length > 0 ? (
             <div className='gap-4 h-screen max-w-screen-md m-auto'>
-              {chatrooms.map((chatroom: any) => (
+              {chatrooms.map((chatroom) => (
                 <div
                   key={chatroom.id}
                   className='bg-white rounded-lg shadow-md cursor-pointer transition duration-300 hover:shadow-lg m-1'
@@ -50,7 +51,7 @@ const Chatrooms = () => {
                   <div className='p-4 flex items-start'>
                     <div className='mr-3'>
                       <Avatar
-                        src={chatroom.otherUser?.image.url}
+                        src={chatroom.otherUser?.image?.url}
                         userName={chatroom.otherUser?.name}
                       />
                     </div>

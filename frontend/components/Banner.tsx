@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
-function Banner() {
-  const [imageLoaded, setImageLoaded] = useState(false);
+const Banner = () => {
+  const [imageLoaded, setImageLoaded] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
     const img = new Image();
-    img.src = "/banner.jpg";
+    img.src = '/banner.jpg';
     img.onload = () => {
       setImageLoaded(true);
     };
@@ -32,13 +32,13 @@ function Banner() {
         </p>
         <button
           className='text-orange-500 bg-white px-10 py-4 shadow-md rounded-full font-bold my-3 hover:shadow-2xl active:scale-90 transition duration-150'
-          onClick={() => router.push("/search")}
+          onClick={() => router.push('/search')}
         >
           Seach your place.
         </button>
       </div>
     </div>
   );
-}
+};
 
 export default Banner;

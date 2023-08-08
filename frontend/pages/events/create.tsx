@@ -1,23 +1,25 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { SetStateAction, useContext, useEffect, useState } from 'react';
 import { createEvent } from '@/pages/api/event';
 import { getPlaces } from '@/pages/api/place';
 import { AuthContext } from '../_app';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Head from 'next/head';
+import { Place } from '@/typings';
+import moment from 'moment';
 
-const PostForm = () => {
+const PostForm: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
-  const [placeId, setPlaceId] = useState(0);
-  const [places, setPlaces] = useState([]);
-  const [meetingDatetime, setMeetingDatetime] = useState(new Date());
+  const [placeId, setPlaceId] = useState<number>(0);
+  const [places, setPlaces] = useState<Place | Place[]>();
+  const [meetingDatetime, setMeetingDatetime] = useState<string>('');
   const postDisabled =
     title === '' ||
     description == '' ||
     description.length > 500 ||
-    places.length === 0;
+    Array(places).length === 0;
   const descriptionInvalid = description && 500 < description.length;
   const titleInvalid = title && 50 < title.length;
 
@@ -26,7 +28,7 @@ const PostForm = () => {
       try {
         const res = await getPlaces();
         if (res?.status === 200) {
-          setPlaces(res?.data.places as any);
+          setPlaces(res?.data.places);
         }
       } catch (err) {
         console.log(err);
@@ -39,10 +41,10 @@ const PostForm = () => {
   const createFormData = () => {
     const formData = new FormData();
     formData.append('title', title);
-    formData.append('meeting_datetime', meetingDatetime as any);
-    formData.append('description', description);
-    formData.append('userId', currentUser?.id as any);
-    formData.append('placeId', placeId as any);
+    formData.append('meeting_datetime', meetingDatetime.toString());
+    formData.append('description', description.toString());
+    formData.append('userId', currentUser?.id?.toString()!);
+    formData.append('placeId', placeId.toString());
 
     return formData;
   };
@@ -55,9 +57,13 @@ const PostForm = () => {
     await createEvent(data).then(() => {
       setDescription('');
       setTitle('');
-      setMeetingDatetime(new Date());
+      setMeetingDatetime('');
     });
   };
+
+  const filteredPlaces = Array.isArray(places)
+    ? places.filter((place) => place.location)
+    : [];
 
   return (
     <>
@@ -122,8 +128,8 @@ const PostForm = () => {
               type='datetime-local'
               id='meetingDatetime'
               className='border border-gray-300 rounded-md p-2 w-full'
-              value={meetingDatetime as any}
-              onChange={(e) => setMeetingDatetime(e.target.value as any)}
+              value={meetingDatetime as unknown as string}
+              onChange={(e) => setMeetingDatetime(e.target.value)}
             />
           </div>
           <div className='mb-4'>
@@ -137,16 +143,16 @@ const PostForm = () => {
               id='placeId'
               className='border border-gray-300 rounded-md p-2 w-full'
               value={placeId}
-              onChange={(e) => setPlaceId(e.target.value as any)}
+              onChange={(e) =>
+                setPlaceId(e.target.value as unknown as SetStateAction<number>)
+              }
             >
               <option value=''>Select a place</option>
-              {places
-                ?.filter(({ location }) => location)
-                .map(({ id, location }) => (
-                  <option key={id} value={id}>
-                    {location}
-                  </option>
-                ))}
+              {filteredPlaces.map((place) => (
+                <option key={place.id} value={place.id}>
+                  {place.location}
+                </option>
+              ))}
             </select>
           </div>
           <div className='mb-4'>

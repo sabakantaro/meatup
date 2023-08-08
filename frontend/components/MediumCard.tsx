@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { Place } from "@/typings";
 
-function MediumCard({ item }: any) {
+type MediumCardProps = {
+  item: Place;
+};
+
+const MediumCard: React.FC<MediumCardProps> = ({ item }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    if (!item?.image?.url) {
+      return;
+    }
     const img = new Image();
     img.src = item?.image?.url;
     img.onload = () => {

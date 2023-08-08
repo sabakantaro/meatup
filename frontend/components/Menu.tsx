@@ -1,11 +1,17 @@
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
+import { type } from 'os';
 
-function classNames(...classes: any) {
+type UtilityMenuProps = {
+  items: { key: string; name: string; href: string }[];
+  button: React.ReactNode;
+};
+
+const classNames = (...classes: string[]) => {
   return classes.filter(Boolean).join(' ');
-}
+};
 
-const UtilityMenu = ({ items, button }: any) => {
+const UtilityMenu: React.FC<UtilityMenuProps> = ({ items, button }) => {
   return (
     <>
       <Menu as='div' className='relative inline-block text-left'>
@@ -21,9 +27,9 @@ const UtilityMenu = ({ items, button }: any) => {
         >
           <Menu.Items className='absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
             <div className='py-1'>
-              {items.map((item: any) => (
+              {items.map((item) => (
                 <Menu.Item key={item.key}>
-                  {({ active }: any) => (
+                  {({ active }) => (
                     <a
                       href={item.href}
                       className={classNames(

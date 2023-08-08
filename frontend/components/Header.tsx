@@ -12,21 +12,27 @@ import useResize from '@/hooks/useResize';
 import useLoading from '@/hooks/useLoading';
 import { ParsedUrlQuery } from 'querystring';
 
-function Header({ placeholder }: any): React.ReactElement {
+type HeaderProps = {
+  placeholder?: string;
+};
+
+const Header: React.FC<HeaderProps> = ({ placeholder }) => {
   const router = useRouter();
-  const { location, date }: any = router.query;
+  const { location, date } = router.query;
+  const locationString = Array.isArray(location) ? location.join(' ') : location;
+  const dateString = Array.isArray(date) ? date.join('') : date;
   const { currentUser, isSignedIn } = useContext(AuthContext);
-  const [searchInput, setSearchInput] = useState<string>(location || '');
+  const [searchInput, setSearchInput] = useState<string>(locationString || '');
   const [open, setOpen] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const isMobile = useResize();
   const isLoading = useLoading();
 
   useEffect(() => {
-    if (date) {
-      setStartDate(new Date(date));
+    if (dateString) {
+      setStartDate(new Date(dateString));
     }
-  }, [date]);
+  }, [dateString]);
 
   const search = () => {
     const query: ParsedUrlQuery = {};
@@ -62,7 +68,7 @@ function Header({ placeholder }: any): React.ReactElement {
       <input
         value={searchInput}
         onChange={(e) => {
-          setSearchInput(e.target.value);
+          setSearchInput(e.target.value as string);
           setOpen(true);
         }}
         className='flex-grow pl-5 bg-transparent outline-none text-sm text-gray-600 placeholder-gray-400 w-full'
@@ -209,6 +215,6 @@ function Header({ placeholder }: any): React.ReactElement {
       )}
     </header>
   );
-}
+};
 
 export default Header;

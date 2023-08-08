@@ -4,34 +4,36 @@ import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline
 import { AuthContext } from '@/pages/_app';
 import { createBookmark, deleteBookmark } from '@/pages/api/bookmark';
 import { getCurrentUser } from '@/pages/api/auth';
+import { Event } from '@/typings';
 
-type Props = {
-  item: any;
+type BookmarkButtonProps = {
+  item: Event;
 };
 
-const BookmarkButton = ({ item }: Props) => {
+const BookmarkButton: React.FC<BookmarkButtonProps> = ({ item }) => {
   const { isSignedIn, currentUser, setCurrentUser } = useContext(AuthContext);
   const [bookmark, setBookmark] = useState(false);
 
-  const handleBookmarks = async (e: any) => {
+  const handleBookmarks = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isSignedIn) {
       return;
     }
 
     if (bookmark) {
-      await deleteBookmark(
-        String(item?.id),
-        currentUser?.bookmarks.filter((b: any) => b?.eventId === item?.id)[0]
-          ?.id
-      );
-      setBookmark(false);
+      const bookmarkId = currentUser?.bookmarks?.find(
+        (b) => b?.eventId === item?.id
+      )?.id;
+      if (bookmarkId) {
+        await deleteBookmark(item?.id, bookmarkId);
+        setBookmark(false);
+      }
     } else {
       const data: any = {
         eventId: String(item?.id),
         userId: currentUser?.id,
       };
-      await createBookmark(String(item?.id), data);
+      await createBookmark(item?.id, data);
       setBookmark(true);
 
       try {
@@ -48,7 +50,7 @@ const BookmarkButton = ({ item }: Props) => {
   useEffect(() => {
     if (isSignedIn) {
       setBookmark(
-        currentUser?.bookmarks?.some((b: any) => b?.eventId === item?.id)
+        currentUser?.bookmarks?.some((b: any) => b?.eventId === item?.id)!
       );
     }
   }, [isSignedIn, currentUser]);
