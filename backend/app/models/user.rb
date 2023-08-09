@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
   validates :name, presence: true, length: { maximum: 20 }
   validates :email, presence: true, length: { maximum: 50 }
   validates :profile, length: { maximum: 500 }
+  validates :password, presence: true, length: { minimum: 8 }
 
   def as_json(_options = {})
     slice_attrs = %i[id name email image profile birth_date gender created_at]

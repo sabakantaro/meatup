@@ -18,9 +18,9 @@ class Participant < ApplicationRecord
 
   def notify
     send_notification(
-      participant.user_id,
-      "#{participant&.user&.name} participantd in #{participant&.event&.title}! Start to chat!",
-      participant&.event&.user&.image&.url,
+      user_id,
+      "#{user&.name} participantd in #{event&.title}! Start to chat!",
+      user&.image&.url,
       '/chatrooms'
     )
   end
