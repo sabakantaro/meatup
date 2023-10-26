@@ -1,18 +1,18 @@
-import { useState, useContext } from "react";
-import { useRouter } from "next/router";
-import Cookies from "js-cookie";
+import { useState, useContext } from 'react';
+import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
-import { AuthContext } from "@/pages/_app";
-import { signIn } from "@/pages/api/auth";
-import { SignInData } from "@/typings";
-import Header from "@/components/Header";
-import Head from "next/head";
+import { AuthContext } from '@/pages/_app';
+import { signIn } from '@/pages/api/auth';
+import { SignInData } from '@/typings';
+import Header from '@/components/Header';
+import Head from 'next/head';
 
 const SignIn: React.FC = () => {
   const router = useRouter();
   const { setIsSignedIn, setCurrentUser } = useContext(AuthContext);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -26,14 +26,14 @@ const SignIn: React.FC = () => {
       const res = await signIn(data);
 
       if (res?.status === 200) {
-        Cookies.set("_access_token", res.headers["access-token"]);
-        Cookies.set("_client", res.headers["client"]);
-        Cookies.set("_uid", res.headers["uid"]);
+        Cookies.set('_access_token', res.headers['access-token']);
+        Cookies.set('_client', res.headers['client']);
+        Cookies.set('_uid', res.headers['uid']);
 
         setIsSignedIn(true);
         setCurrentUser(res.data.data);
 
-        router.push("/");
+        router.push('/');
       }
     } catch (err) {
       console.log(err);
@@ -85,6 +85,7 @@ const SignIn: React.FC = () => {
         </div>
         <div className='flex items-center justify-between'>
           <button
+            id='signin'
             className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline'
             type='submit'
             disabled={!email || !password}

@@ -19,7 +19,9 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ placeholder }) => {
   const router = useRouter();
   const { location, date } = router.query;
-  const locationString = Array.isArray(location) ? location.join(' ') : location;
+  const locationString = Array.isArray(location)
+    ? location.join(' ')
+    : location;
   const dateString = Array.isArray(date) ? date.join('') : date;
   const { currentUser, isSignedIn } = useContext(AuthContext);
   const [searchInput, setSearchInput] = useState<string>(locationString || '');
